@@ -1,0 +1,119 @@
+﻿  block.cpp
+  bullet.cpp
+  enemy.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\enemy.cpp(129): warning C4018: '<': signed/unsigned mismatch
+  fonts.cpp
+  game.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(92): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(139): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(203): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(212): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(251): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  gameobject.cpp
+  gun.cpp
+  images.cpp
+  logger.cpp
+  main.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\main.cpp(87): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  menu.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(90): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(91): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(131): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(132): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(214): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(215): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(287): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(294): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(317): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(318): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  menubutton.cpp
+  player.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\player.cpp(105): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\player.cpp(171): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\player.cpp(248): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+  room.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(11): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(46): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(47): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(51): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(52): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(53): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(61): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(62): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(67): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(68): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(75): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(76): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(81): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(82): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(83): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(85): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(93): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(104): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(105): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(123): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(125): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(126): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(135): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(136): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(165): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(166): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(170): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(170): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(173): warning C4305: 'argument': truncation from 'int' to 'const _Ty'
+          with
+          [
+              _Ty=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(186): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(186): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(206): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(213): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(242): warning C4018: '<': signed/unsigned mismatch
+  sounds.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\sounds.cpp(25): warning C4018: '<': signed/unsigned mismatch
+  util.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\util.cpp(20): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\util.cpp(21): warning C4305: '-=': truncation from 'double' to 'float'
+  xbox.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\xbox.cpp(69): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\xbox.cpp(78): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\xbox.cpp(87): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\xbox.cpp(88): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\xbox.cpp(91): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\xbox.cpp(99): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\xbox.cpp(102): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+sfml-graphics-s-d.lib(RenderStates.cpp.obj) : fatal error LNK1112: module machine type 'x64' conflicts with target machine type 'x86'
