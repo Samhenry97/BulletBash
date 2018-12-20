@@ -3,6 +3,7 @@
 #include "player.h"
 #include "sounds.h"
 #include "const.h"
+#include "particle.h"
 #include "util.h"
 
 std::vector<Enemy*(*)(vec2 pos)> NORMAL_ENEMIES;
@@ -16,7 +17,6 @@ Enemy::Enemy(vec2 pos) {
 	spawnTime = 2.0f;
 	pathClock = pathTime = 1.0f;
 	spawning = true;
-	smart = true;
 	knockSpeed = 300.0f;
 }
 
@@ -24,6 +24,12 @@ Enemy::~Enemy() {
 	if (gun && (rand() % 10 == 1)) {
 		gun->drop();
 	} else {
+		if (rand() % 5 == 1) {
+			game->room->addItem(new PAmmo(sprite.getPosition()));
+		} 
+		if (rand() % 5 == 1) {
+			game->room->addItem(new PHealth(sprite.getPosition()));
+		}
 		delete gun;
 	}
 }
@@ -45,6 +51,7 @@ void Enemy::update() {
 	} else {
 		float x = 0, y = 0, dx = 0, dy = 0;
 		Player *nearest = game->nearestPlayer(this);
+
 		float angle = this->angle(*nearest);
 		float curx = sprite.getPosition().x;
 		float cury = sprite.getPosition().y;
@@ -102,17 +109,28 @@ void Enemy::update() {
 
 		if (gun) {
 			if (smart) {
-				float dist = this->dist(*nearest);
-				float time = dist / gun->speed;
-				float px = nearest->sprite.getPosition().x + (nearest->speed * cos(nearest->moveAngle) * time);
-				float py = nearest->sprite.getPosition().y + (nearest->speed * sin(nearest->moveAngle) * time);
-				float bx = px - sprite.getPosition().x;
-				float by = py - sprite.getPosition().y;
-				gun->angle = atan2(by, bx);
-			} else {
-				gun->angle = angle;
+				float bottom = 0.0f, top = 100.0f;
+				float mid = (bottom + top) / 2;
+				for (int i = 0; i < 25; i++) {
+					float playerX = nearest->sprite.getPosition().x;
+					float playerY = nearest->sprite.getPosition().y;
+					float futurePlayerX = playerX + nearest->speed * mid * cos(nearest->moveAngle);
+					float futurePlayerY = playerY + nearest->speed * mid * sin(nearest->moveAngle);
+					angle = atan2(futurePlayerY - cury, futurePlayerX - curx);
+					float bulletX = curx + gun->speed * mid * cos(angle);
+					float bulletY = cury + gun->speed * mid * sin(angle);
+					// https://math.stackexchange.com/questions/162728/how-to-determine-if-2-points-are-on-opposite-sides-of-a-line
+					float tmp1 = ((futurePlayerY - playerY) * (curx - futurePlayerX)) + ((playerX - futurePlayerX) * (cury - futurePlayerY));
+					float tmp2 = ((futurePlayerY - playerY) * (bulletX - futurePlayerX)) + ((playerX - futurePlayerX) * (bulletY - futurePlayerY));
+					if (tmp1 * tmp2 < 0) {
+						top = mid;
+					} else {
+						bottom = mid;
+					}
+					mid = (bottom + top) / 2;
+				}
 			}
-
+			gun->angle = angle;
 			gun->update();
 			gun->tryFire();
 		}
@@ -170,7 +188,11 @@ void Enemy::damage(int amt) {
 }
 
 bool Enemy::dead() {
-	return health <= 0;
+	if (health <= 0) {
+		game->room->addParticleSystem(new ParticleSystem(sprite.getPosition(), 100, 10, 0.04f));
+		return true;
+	}
+	return false;
 }
 
 void Enemy::pathfind() {
@@ -185,7 +207,6 @@ EBasic::EBasic(vec2 pos) : Enemy(pos) {
 	health = maxHealth = 120;
 	gun = new GPistol(this);
 	gun->fireTime = 1.0f;
-	gun->speed = 300.0f;
 }
 
 EAlien::EAlien(vec2 pos) : Enemy(pos) {
@@ -195,7 +216,7 @@ EAlien::EAlien(vec2 pos) : Enemy(pos) {
 	health = maxHealth = 300;
 	gun = new GShotgun(this);
 	gun->fireTime = 1.5f;
-	gun->speed = 300.0f;
+	smart = true;
 }
 
 ESlime::ESlime(vec2 pos) : ESlime(pos, 1) { }

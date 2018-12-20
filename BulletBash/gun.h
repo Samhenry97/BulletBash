@@ -2,8 +2,9 @@
 
 #include "const.h"
 #include "gameobject.h"
+#include "pickup.h"
 
-class Gun : public GameObject {
+class Gun : public Pickup {
 protected:
 	GameObject *owner;
 
@@ -12,8 +13,8 @@ public:
 	std::string name;
 	float fireClock, fireTime;
 	float reloadClock, reloadTime;
-	float speed, angle;
-	int clip, ammo, activeAmmo;
+	float speed, angle, spread;
+	int clip, ammo, activeAmmo, startingAmmo;
 
 	Gun(GameObject *owner, float fireTime, float reloadTime, int clip, int ammo);
 
@@ -24,6 +25,7 @@ public:
 	void update();
 	void render();
 	void drop();
+	void interact(GameObject *player);
 };
 
 class GPistol : public Gun {

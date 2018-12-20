@@ -156,6 +156,8 @@
     <ClInclude Include="logger.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="menubutton.h" />
+    <ClInclude Include="particle.h" />
+    <ClInclude Include="pickup.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="room.h" />
     <ClInclude Include="sounds.h" />
@@ -175,6 +177,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="menubutton.cpp" />
+    <ClCompile Include="particle.cpp" />
+    <ClCompile Include="pickup.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="sounds.cpp" />

@@ -17,7 +17,7 @@ Player::Player(vec2 pos, vec2 size, std::string image) : GameObject(pos, size) {
 	reloadProgress.setSize(vec2(BLOCK_SIZE, 12));
 	reloadProgress.setFillColor(sf::Color(0, 0, 100));
 	controller = 0;
-	baseSpeed = speed = 2.0f;
+	baseSpeed = speed = 300.0f;
 	health = maxHealth = 500;
 	dashTime = 0.4f;
 	damageTime = 0.5f;
@@ -73,9 +73,12 @@ void Player::axisMoved(int axis, int pos) {
 void Player::update() {
 	float x, y;
 	if (!dashing) {
-		x = Xbox::getAxis(controller, XBOX_LX) * frameTime * speed;
-		y = Xbox::getAxis(controller, XBOX_LY) * frameTime * speed;
-		moveAngle = dashAngle = atan2(y, x);
+		float cx = Xbox::getAxis(controller, XBOX_LX);
+		float cy = Xbox::getAxis(controller, XBOX_LY);
+		speed = hypot(cx, cy) * 2.0f;
+		moveAngle = dashAngle = atan2(cy, cx);
+		x = speed * frameTime * cos(moveAngle);
+		y = speed * frameTime * sin(moveAngle);
 	} else {
 		x = speed * frameTime * cos(dashAngle);
 		y = speed * frameTime * sin(dashAngle);
@@ -268,6 +271,16 @@ void Player::damage(int amt) {
 		sprite.setFillColor(sf::Color::Red);
 		Sounds::play("damage.wav");
 	}
+}
+
+void Player::fillAmmo() {
+	if (gun) {
+		gun->ammo = gun->startingAmmo;
+	}
+}
+
+void Player::heal(int amt) {
+	health = std::min(health + amt, maxHealth);
 }
 
 int Player::type() {

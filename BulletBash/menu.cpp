@@ -29,11 +29,11 @@ void Menu::reset() {
 
 void Menu::update() {
 	float y = Xbox::getAxis(XBOX_LY);
-	if (-0.1f <= y && y <= 0.1f) y = -Xbox::getAxis(XBOX_DY);
-	if (-0.1f <= y && y <= 0.1f) {
+	if (-1.0f <= y && y <= 1.0f) y = -Xbox::getAxis(XBOX_DY);
+	if (-1.0f <= y && y <= 1.0f) {
 		moveClock = moveTime;
 	} else if (moveClock >= moveTime) {
-		if (y < -0.1f) {
+		if (y < -1.0f) {
 			changeSelected(selected, (selected - 1) % buttons.size());
 		} else {
 			changeSelected(selected, (selected + 1) % buttons.size());
@@ -222,9 +222,9 @@ void CharacterMenu::update() {
 			}
 		} else if (!info.confirmed) {
 			float y = Xbox::getAxis(controller, XBOX_LY);
-			if (-0.1f <= y && y <= 0.1f) y = -Xbox::getAxis(controller, XBOX_DY);
-			if (y <= -0.1f || 0.1f <= y) {
-				if (y < -0.1f) {
+			if (-1.0f <= y && y <= 1.0f) y = -Xbox::getAxis(controller, XBOX_DY);
+			if (y <= -1.0f || 1.0f <= y) {
+				if (y < -1.0f) {
 					changeCharacter(i, info.selected, ((info.selected - 1) % MAX_CHARACTER + MAX_CHARACTER) % MAX_CHARACTER, 1);
 				} else {
 					changeCharacter(i, info.selected, (info.selected + 1) % MAX_CHARACTER, -1);

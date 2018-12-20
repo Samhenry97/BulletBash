@@ -10,6 +10,7 @@ Gun::Gun(GameObject *owner, float fireTime, float reloadTime, int clip, int ammo
 	this->reloadTime = reloadTime;
 	this->clip = clip;
 	this->ammo = ammo;
+	this->startingAmmo = ammo;
 }
 
 void Gun::tryFire() {
@@ -31,7 +32,7 @@ void Gun::fire() {
 
 void Gun::reload() {
 	if (ammo == 0) {
-		Sounds::play("noammo.flac");
+		Sounds::play("empty.wav");
 	} else if (!reloading && (activeAmmo < clip || clip == -1)) {
 		reloading = true;
 		reloadClock = 0;
@@ -82,6 +83,12 @@ void Gun::render() {
 	window->draw(sprite);
 }
 
+void Gun::interact(GameObject *player) {
+	if (Player *p = dynamic_cast<Player*>(player)) {
+		p->addItem(this);
+	}
+}
+
 GPistol::GPistol(GameObject *owner) : Gun(owner, 0.2f, 1.0f, 12, -1) {
 	sprite.setTexture(Images::get("pistol.png"));
 	sprite.setSize(vec2(40, 30));
@@ -112,16 +119,16 @@ GShotgun::GShotgun(GameObject *owner) : Gun(owner, 0.6f, 1.4f, 6, 200) {
 	sprite.setTexture(Images::get("shotgun.png"));
 	sprite.setSize(vec2(80, 25));
 	speed = 800.0f;
+	spread = 0.64f;
 	origin();
 	name = "Shotgun";
 }
 
 void GShotgun::fire() {
 	Sounds::play("shotgun.wav");
-	angle -= 0.2f;
 	for (int i = 0; i < 8; i++) {
-		game->room->addBullet(new BHeavy(owner->type(), owner->center(), speed, angle));
-		angle += 0.05f;
+		float shift = randFloat(0.0f, spread) - spread / 2;
+		game->room->addBullet(new BHeavy(owner->type(), owner->center(), speed, angle + shift));
 	}
 }
 

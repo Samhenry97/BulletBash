@@ -35,7 +35,7 @@
 
 #define MAX_ANIM 2
 #define MAX_CHARACTER 5
-#define MAX_ROOM_BACK 11
+#define MAX_ROOM_BACK 5
 #define RADIANS_TO_DEGREES (float) (180 / 3.14)
 #define SAFEZONE 4
 

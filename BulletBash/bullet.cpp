@@ -25,7 +25,7 @@ void Bullet::update() {
 		if (nearest) {
 			float turn = turnAngle(GameObject::angle(*nearest), moveAngle);
 			if (GameObject::dist(*nearest) <= homingDeadzone) {
-				moveAngle += homingSpeed * frameTime * (turn < 0 ? 1 : -1);
+				moveAngle += homingSpeed * frameTime * (turn > PI ? 1 : -1);
 			}
 		}
 	}
@@ -150,7 +150,7 @@ BFlame::BFlame(int type, vec2 pos, float speed, float angle) : Bullet(type, pos,
 
 BHoming::BHoming(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("homing.png"));
-	sprite.setSize(vec2(40, 40));
+	sprite.setSize(vec2(40, 14));
 	origin();
 	damage = 80;
 	homing = true;

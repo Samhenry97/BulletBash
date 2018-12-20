@@ -14,10 +14,12 @@ float randFloat(float a, float b) {
 	return a + r;
 }
 
-// https://math.stackexchange.com/questions/1366869/calculating-rotation-direction-between-two-angles
+// https://stackoverflow.com/questions/16613616/work-out-whether-to-turn-clockwise-or-anticlockwise-from-two-angles
 float turnAngle(float current, float target) {
-	float provisional = target - current;
-	while (provisional <= -PI) { provisional += PI; }
-	while (provisional > PI) { provisional -= PI; }
-	return provisional;
+	float pi2 = 2 * PI;
+	target -= current;
+	current = 0;
+	while (target < 0) { target += pi2; }
+	while (target > pi2) { target -= pi2; }
+	return target;
 }

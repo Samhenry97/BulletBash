@@ -2,9 +2,10 @@
 #include "game.h"
 #include "sounds.h"
 #include "util.h"
+#include "pickup.h"
 
 Room::Room(int width, int height, int level) {
-	std::string image = "room/back" + STR(rand() % MAX_ROOM_BACK + 1) + ".png";
+	std::string image = "room/back" + STR((rand() % MAX_ROOM_BACK) + 1) + ".png";
 	Images::get(image)->setRepeated(true);
 	sprite.setTexture(Images::get(image));
 	sprite.setTextureRect(sf::IntRect(0, 0, width * BLOCK_SIZE, height * BLOCK_SIZE));
@@ -29,16 +30,6 @@ Room::Room(int width, int height, int level) {
 	for (int i = 1; i < height - 1; i++) {
 		blocks[i][0] = new Block(i * BLOCK_SIZE, 0);
 		blocks[i][width - 1] = new Block(i * BLOCK_SIZE, (width - 1) * BLOCK_SIZE);
-	}
-
-	for (int i = 0; i < 15; i++) {
-		int y = (rand() % (height - 2)) + 1;
-		int x = (rand() % (width - 2)) + 1;
-
-		blocks[y][x] = new Block(y * BLOCK_SIZE, x * BLOCK_SIZE);
-		blocks[y + 1][x] = new Block((y + 1) * BLOCK_SIZE, x * BLOCK_SIZE);
-		blocks[y][x + 1] = new Block(y * BLOCK_SIZE, (x + 1) * BLOCK_SIZE);
-		blocks[y + 1][x + 1] = new Block((y + 1) * BLOCK_SIZE, (x + 1) * BLOCK_SIZE);
 	}
 }
 
@@ -81,6 +72,7 @@ void Room::update() {
 	for (int i = 0; i < enemies.size(); i++) { enemies[i]->update(); }
 	for (int i = 0; i < bullets.size(); i++) { bullets[i]->update(); }
 	for (int i = 0; i < items.size(); i++) { items[i]->update(); }
+	for (int i = 0; i < particles.size(); i++) { particles[i]->update(); }
 
 	for (int i = 0; i < bullets.size(); i++) {
 		Bullet *cur = bullets[i];
@@ -97,10 +89,19 @@ void Room::update() {
 			delete cur; i--;
 		}
 	}
+
+	for (int i = 0; i < particles.size(); i++) {
+		ParticleSystem *cur = particles[i];
+		if (cur->dead()) {
+			particles.erase(particles.begin() + i);
+			delete cur; i--;
+		}
+	}
 }
 
 void Room::render() {
 	window->draw(sprite);
+	for (ParticleSystem *system : particles) { system->render(); }
 	for (int y = 0; y < blocks.size(); y++) {
 		for (int x = 0; x < blocks[y].size(); x++) {
 			if (blocks[y][x]) blocks[y][x]->render();
@@ -211,15 +212,17 @@ void Room::pathfind(std::vector<vec2i> &path, GameObject *src, GameObject *dest)
 
 void Room::interact(Player *player) {
 	for (int i = 0; i < items.size(); i++) {
-		if (player->intersects(*items[i])) {
-			player->addItem(items[i]);
+		Pickup *cur = items[i];
+		if (player->intersects(*cur)) {
+			cur->interact(player);
 			items.erase(items.begin() + i);
+			if (cur->dead()) { delete cur; }
 			i--;
 		}
 	}
 }
 
-GameObject *Room::addItem(GameObject *item) {
+Pickup *Room::addItem(Pickup *item) {
 	items.push_back(item);
 	return item;
 }
@@ -232,6 +235,11 @@ Bullet *Room::addBullet(Bullet *bullet) {
 Enemy *Room::addEnemy(Enemy *enemy) {
 	enemies.push_back(enemy);
 	return enemy;
+}
+
+ParticleSystem *Room::addParticleSystem(ParticleSystem *system) {
+	particles.push_back(system);
+	return system;
 }
 
 GameObject *Room::nearestEnemy(GameObject *object) {

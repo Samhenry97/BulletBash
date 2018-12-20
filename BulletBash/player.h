@@ -2,8 +2,8 @@
 
 #include "const.h"
 #include "gameobject.h"
-#include "gun.h"
 #include "xbox.h"
+#include "gun.h"
 
 class Player : public GameObject {
 private:
@@ -38,6 +38,8 @@ public:
 	void buttonReleased(int button);
 	void axisMoved(int axis, int pos);
 	void changeImage(std::string newImage);
+	void fillAmmo();
+	void heal(int amt);
 	int type();
 	void setController(int newController);
 	bool dead();

@@ -4,6 +4,7 @@
 #include "enemy.h"
 #include "player.h"
 #include "bullet.h"
+#include "particle.h"
 
 struct Node {
 	int y, x;
@@ -26,11 +27,12 @@ class Room : GameObject {
 private:
 	int width, height, waveCount, waveTotal, level;
 	std::vector<std::vector<Block*>> blocks;
-	std::vector<GameObject*> items;
 
 public:
+	std::vector<Pickup*> items;
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;
+	std::vector<ParticleSystem*> particles;
 
 	Room(int width, int height, int level);
 	~Room();
@@ -39,9 +41,10 @@ public:
 	void renderStatic();
 	void renderMinimap();
 	void interact(Player *player);
-	GameObject *addItem(GameObject *item);
+	Pickup *addItem(Pickup *item);
 	Bullet *addBullet(Bullet *bullet);
 	Enemy *addEnemy(Enemy *enemy);
+	ParticleSystem *addParticleSystem(ParticleSystem *system);
 	int blockCollision(vec2 point);
 	int collision(GameObject *origin, vec2 point);
 	bool complete();
