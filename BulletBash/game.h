@@ -13,12 +13,13 @@ private:
 	PauseMenu *pauseMenu;
 	CharacterMenu *characterMenu;
 	GameOverMenu *gameOverMenu;
-	int floor, level;
+	int floor;
 
 public:
 	enum State { START, CHARACTER, PAUSED, INGAME, GAMEOVER } state;
 	Room *room;
 	std::vector<Player*> players;
+	std::vector<Room*> rooms;
 	std::map<int, Player*> playerControllers;
 
 	Game();
@@ -27,7 +28,8 @@ public:
 	void renderStatic();
 	void renderMinimap();
 	void update();
-	void nextRoom();
+	void transport(int dir);
+	void nextFloor();
 	void start();
 	void sendButtonPressed(int id, int button);
 	void sendButtonReleased(int id, int button);

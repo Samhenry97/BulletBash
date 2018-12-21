@@ -47,9 +47,14 @@ bool Xbox::buttonDown(int controller, int button) {
 
 float Xbox::getAxis(int controller, int axis) {
 	if (bounds(controller) && axisBounds(axis)) {
-		return controllers[controller]->axes[axis];
+		float val = controllers[controller]->axes[axis];
+		if (-XBOX_DEADZONE <= val && val <= XBOX_DEADZONE) {
+			return 0.0f;
+		} else {
+			return val;
+		}
 	}
-	return 0;
+	return 0.0f;
 }
 
 void Xbox::setConnected(int controller, bool state) {
@@ -80,7 +85,7 @@ float Xbox::getAxis(int axis) {
 			return getAxis(i, axis);
 		}
 	}
-	return 0;
+	return 0.0f;
 }
 
 void Xbox::clearInputs() {

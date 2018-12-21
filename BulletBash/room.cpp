@@ -11,8 +11,7 @@ Room::Room(int width, int height, int level) {
 	sprite.setTextureRect(sf::IntRect(0, 0, width * BLOCK_SIZE, height * BLOCK_SIZE));
 	sprite.setSize(vec2(width * BLOCK_SIZE, height * BLOCK_SIZE));
 
-	if (level % 5 == 0) { waveTotal = 1; Sounds::boss(); }
-	else { waveTotal = 3; Sounds::back();  }
+	adj = std::vector<Room*>(4, nullptr);
 
 	this->width = width;
 	this->height = height;
@@ -23,12 +22,12 @@ Room::Room(int width, int height, int level) {
 	}
 
 	for (int i = 0; i < width; i++) {
-		blocks[0][i] = new Block(0, i * BLOCK_SIZE);
+		blocks[0][i] = new Block(0.0f, i * BLOCK_SIZE);
 		blocks[height - 1][i] = new Block((height - 1) * BLOCK_SIZE, i * BLOCK_SIZE);
 	}
 
 	for (int i = 1; i < height - 1; i++) {
-		blocks[i][0] = new Block(i * BLOCK_SIZE, 0);
+		blocks[i][0] = new Block(i * BLOCK_SIZE, 0.0f);
 		blocks[i][width - 1] = new Block(i * BLOCK_SIZE, (width - 1) * BLOCK_SIZE);
 	}
 }
@@ -45,23 +44,6 @@ Room::~Room() {
 }
 
 void Room::update() {
-	if (enemies.empty()) {
-		if (waveCount <= waveTotal) {
-			waveCount++;
-			if (level % 5 == 0) {
-				float x = rand() % (width - 2) + 1;
-				float y = rand() % (height - 2) + 1;
-				enemies.push_back(BOSS_ENEMIES[rand() % BOSS_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
-			} else {
-				int count = (rand() % 5) + 5;
-				for (int i = 0; i < count; i++) {
-					float x = rand() % (width - 2) + 1;
-					float y = rand() % (height - 2) + 1;
-					enemies.push_back(NORMAL_ENEMIES[rand() % NORMAL_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
-				}
-			}
-		}
-	}
 
 	for (int y = 0; y < blocks.size(); y++) {
 		for (int x = 0; x < blocks[y].size(); x++) {
@@ -71,9 +53,24 @@ void Room::update() {
 
 	for (int i = 0; i < enemies.size(); i++) { enemies[i]->update(); }
 	for (int i = 0; i < bullets.size(); i++) { bullets[i]->update(); }
-	for (int i = 0; i < items.size(); i++) { items[i]->update(); }
 	for (int i = 0; i < particles.size(); i++) { particles[i]->update(); }
 
+	// Highlight the pickups that can be interacted with
+	std::vector<bool> playerHighlight(totalPlayers, false);
+	for (int i = 0; i < items.size(); i++) {
+		Pickup *cur = items[i];
+		cur->update();
+		if (cur->interactable()) {
+			for (int i = 0; i < totalPlayers; i++) {
+				if (!playerHighlight[i] && game->players[i]->intersects(*cur)) {
+					playerHighlight[i] = true;
+					cur->highlight();
+				}
+			}
+		}
+	}
+
+	// Clear all of the entities that need clearing
 	for (int i = 0; i < bullets.size(); i++) {
 		Bullet *cur = bullets[i];
 		if (cur->dead()) {
@@ -101,6 +98,7 @@ void Room::update() {
 
 void Room::render() {
 	window->draw(sprite);
+	for (sf::RectangleShape shape : back) { window->draw(shape); }
 	for (ParticleSystem *system : particles) { system->render(); }
 	for (int y = 0; y < blocks.size(); y++) {
 		for (int x = 0; x < blocks[y].size(); x++) {
@@ -110,6 +108,20 @@ void Room::render() {
 	for (Enemy *enemy : enemies) { enemy->render(); }
 	for (Bullet* bullet : bullets) { bullet->render(); }
 	for (GameObject *item : items) { item->render(); }
+}
+
+std::vector<int> Room::availableDirs() {
+	std::vector<int> ret;
+	for (int i = 0; i < adj.size(); i++) {
+		if (!adj[i]) {
+			ret.push_back(i);
+		}
+	}
+	return ret;
+}
+
+vec2 Room::center() {
+	return vec2(width * BLOCK_SIZE / 2, height * BLOCK_SIZE / 2);
 }
 
 void Room::renderStatic() {
@@ -158,7 +170,7 @@ int Room::collision(GameObject *origin, vec2 point) {
 }
 
 bool Room::complete() {
-	return waveCount == waveTotal && enemies.empty();
+	return finished;
 }
 
 void Room::pathfind(std::vector<vec2i> &path, GameObject *src, GameObject *dest) {
@@ -213,11 +225,13 @@ void Room::pathfind(std::vector<vec2i> &path, GameObject *src, GameObject *dest)
 void Room::interact(Player *player) {
 	for (int i = 0; i < items.size(); i++) {
 		Pickup *cur = items[i];
-		if (player->intersects(*cur)) {
-			cur->interact(player);
-			items.erase(items.begin() + i);
+		if (cur->interactable() && player->intersects(*cur)) {
+			if (cur->interact(player)) {
+				items.erase(items.begin() + i);
+				i--;
+			}
 			if (cur->dead()) { delete cur; }
-			i--;
+			break;
 		}
 	}
 }
@@ -256,4 +270,88 @@ GameObject *Room::nearestEnemy(GameObject *object) {
 	}
 
 	return ret;
+}
+
+vec2 Room::spawnLocation(int dir) {
+	vec2 pos;
+	switch (dir) {
+	case DIR_UP:
+		pos.x = ((width - 1) * BLOCK_SIZE) / 2;
+		pos.y = BLOCK_SIZE;
+		break;
+	case DIR_RIGHT:
+		pos.x = (width - 2) * BLOCK_SIZE;
+		pos.y = ((height - 1) * BLOCK_SIZE) / 2;
+		break;
+	case DIR_DOWN:
+		pos.x = ((width - 1) * BLOCK_SIZE) / 2;
+		pos.y = (height - 2) * BLOCK_SIZE;
+		break;
+	case DIR_LEFT:
+		pos.x = BLOCK_SIZE;
+		pos.y = ((height - 1) * BLOCK_SIZE) / 2;
+		break;
+	}
+	return pos;
+}
+
+void Room::setRoom(Room *nextRoom, int dir) {
+	adj[dir] = nextRoom;
+	vec2 pos = spawnLocation(dir);
+	addItem(new PDoor(pos, dir));
+}
+
+void Room::finish() {
+	if (!finished) {
+		finished = true;
+		for (int i = 0; i < items.size(); i++) {
+			if (PDoor *door = dynamic_cast<PDoor*>(items[i])) {
+				door->enable();
+			}
+		}
+	}
+}
+
+REnemy::REnemy(int width, int height, int level) : Room(width, height, level) {
+	waveTotal = rand() % 3 + 1;
+}
+
+void REnemy::update() {
+	Room::update();
+	if (enemies.empty()) {
+		if (waveCount <= waveTotal) {
+			waveCount++;
+			if (level % 5 == 0) {
+				float x = rand() % (width - 2) + 1;
+				float y = rand() % (height - 2) + 1;
+				enemies.push_back(BOSS_ENEMIES[rand() % BOSS_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
+			} else {
+				int count = (rand() % 5) + 3;
+				for (int i = 0; i < count; i++) {
+					float x = rand() % (width - 2) + 1;
+					float y = rand() % (height - 2) + 1;
+					enemies.push_back(NORMAL_ENEMIES[rand() % NORMAL_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
+				}
+			}
+		} else {
+			finish();
+		}
+	}
+}
+
+RChest::RChest(int level) : Room(10, 10, level) {
+	sf::RectangleShape platform;
+	platform.setSize(vec2(BLOCK_SIZE * 4, BLOCK_SIZE * 4));
+	platform.setOrigin(vec2(BLOCK_SIZE * 2, BLOCK_SIZE * 2));
+	platform.setPosition(center());
+	platform.setTexture(Images::get("platform.png"));
+	back.push_back(platform);
+	PChest *chest = new PChest(center(), 5);
+	chest->sprite.move(-BLOCK_SIZE / 2, -BLOCK_SIZE / 2);
+	addItem(chest);
+}
+
+void RChest::update() {
+	Room::update();
+	finish();
 }

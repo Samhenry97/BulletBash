@@ -89,8 +89,6 @@ void Player::update() {
 	float cury = sprite.getPosition().y;
 	float width = sprite.getSize().x;
 	float height = sprite.getSize().y;
-	if (-0.05f <= x && x <= 0.05f) x = 0;
-	if (-0.05f <= y && y <= 0.05f) y = 0;
 	if (x < 0 && curx - x < port.left) x = 0;
 	if (x > 0 && curx + x + width > port.left + port.width) x = 0;
 	if (y < 0 && cury - y < port.top) y = 0;
@@ -105,12 +103,12 @@ void Player::update() {
 	float dx = Xbox::getAxis(controller, XBOX_RX);
 	float dy = Xbox::getAxis(controller, XBOX_RY);
 	float angle = atan2(dy, dx);
-	if (-0.1f <= dx && dx <= 0.1f && -0.1f <= dy && dy <= 0.1f) angle = dir == 1 ? 0 : 3.14;
+	if (dx == 0.0f && dy == 0.0f) angle = dir == 1 ? 0 : 3.14;
 
-	if (dx < -0.1f) {
+	if (dx < 0.0f) {
 		flipLeft();
 		dir = -1;
-	} else if (dx > 0.1f) {
+	} else if (dx > 0.0f) {
 		flipRight();
 		dir = 1;
 	} else if(x < 0) {

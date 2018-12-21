@@ -4,7 +4,8 @@ namespace Sounds {
 	std::vector<std::string> names = { 
 		"bullet.wav", "damage.wav", "mommy.wav", "mommylove.wav",
 		"empty.wav", "reload.wav", "shotgun.wav", "water.wav",
-		"flamethrower.wav", "select.wav", "hover.wav", "ammo.wav",
+		"flamethrower.wav", "select.wav", "hover.wav", "ammo.wav", 
+		"amazing.wav", "nextroom.wav",
 	};
 	std::unordered_map<std::string, sf::SoundBuffer> sounds;
 	std::unordered_map<std::string, sf::Music*> musics;

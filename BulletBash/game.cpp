@@ -35,10 +35,39 @@ Game::~Game() {
 }
 
 void Game::start() {
+	nextFloor();
 	for (Player *player : players) { player->health = player->maxHealth; }
-	floor = 1; level = 0; 
-	nextRoom();
 	switchTo(INGAME);
+}
+
+void Game::nextFloor() {
+	for (int i = 0; i < rooms.size(); i++) {
+		delete rooms[i];
+	}
+	rooms.clear();
+
+	// Generate the floor
+	rooms.push_back(new RChest(floor));
+	std::queue<GenNode> gen;
+	gen.push({ rooms[0], 0 });
+	while (!gen.empty()) {
+		GenNode node = gen.front(); gen.pop();
+		std::vector<int> available = node.room->availableDirs();
+		int toadd = (rand() % (available.size() - 1)) + 1;
+		for (int i = 0; i < toadd; i++) {
+			int dir = available[rand() % available.size()];
+			Room *next = new REnemy(20, 20, node.level + 1);
+			rooms.push_back(next);
+			node.room->setRoom(next, dir);
+			next->setRoom(node.room, (dir + 2) % 4);
+			available.erase(find(available.begin(), available.end(), dir));
+			if (node.level < MAX_ROOM_LEVEL) {
+				gen.push({ next, node.level + 1 });
+			}
+		}
+	}
+
+	room = rooms[0];
 }
 
 void Game::switchTo(State newState) {
@@ -88,7 +117,6 @@ void Game::update() {
 
 	case INGAME:
 		room->update();
-		if (room->complete()) nextRoom();
 		for (int i = 0; i < players.size(); i++) { 
 			players[i]->update(); 
 			if (players[i]->dead()) deadCount++;
@@ -169,7 +197,7 @@ void Game::renderStatic() {
 	case INGAME:
 		room->renderStatic();
 		for (Player* player : players) { player->renderStatic(); }
-		levelText.setString("Floor " + STR(floor) + " | Room " + STR(level));
+		levelText.setString("Floor " + STR(floor));
 		levelText.setFont(Fonts::get("Raleway-Medium.ttf"));
 		levelText.setFillColor(sf::Color::White);
 		levelText.setCharacterSize(30);
@@ -192,16 +220,12 @@ void Game::renderMinimap() {
 	}
 }
 
-void Game::nextRoom() {
-	delete room;
-	level++;
-	if (level > 5) {
-		level = 1;
-		floor++;
-	}
-	room = new Room(rand() % 10 + 20, rand() % 10 + 20, level);
-	for (int i = 0; i < players.size(); i++) {
-		players[i]->sprite.setPosition(BLOCK_SIZE, BLOCK_SIZE);
+void Game::transport(int dir) {
+	room = room->adj[dir];
+	int spawnDir = (dir + 2) % 4;
+	vec2 spawn = room->spawnLocation(spawnDir);
+	for (int i = 0; i < totalPlayers; i++) {
+		players[i]->sprite.setPosition(spawn);
 	}
 }
 

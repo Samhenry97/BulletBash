@@ -66,9 +66,6 @@
     <ClInclude Include="sounds.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
-    <ClInclude Include="logger.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
     <ClInclude Include="images.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
@@ -95,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="pickup.h">
       <Filter>Header Files\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Source Files\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

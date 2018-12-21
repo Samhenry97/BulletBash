@@ -25,7 +25,8 @@ public:
 	void update();
 	void render();
 	void drop();
-	void interact(GameObject *player);
+	float getAngle();
+	bool interact(GameObject *player);
 };
 
 class GPistol : public Gun {

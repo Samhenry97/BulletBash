@@ -82,6 +82,10 @@ int main() {
 	minimapBackground.setTexture(Images::get("gui.png"));
 	minimapBackground.setFillColor(sf::Color(255, 255, 255, 200));
 
+	sf::RectangleShape background;
+	background.setSize(vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
+	background.setTexture(Images::get("background.png"));
+
 	Sounds::init();
 	Xbox::init();
 	srand(time(0));
@@ -95,6 +99,8 @@ int main() {
 		frameTime = timer.restart().asSeconds();
 
 		display.clear(sf::Color::Black);
+		window->setView(window->getDefaultView());
+		window->draw(background);
 		window->setView(*view);
 		game->render();
 		window->setView(window->getDefaultView());

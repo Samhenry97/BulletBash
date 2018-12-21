@@ -7,6 +7,7 @@
 Gun::Gun(GameObject *owner, float fireTime, float reloadTime, int clip, int ammo) {
 	this->owner = owner;
 	this->fireTime = fireTime;
+	this->fireClock = fireTime;
 	this->reloadTime = reloadTime;
 	this->clip = clip;
 	this->ammo = ammo;
@@ -59,6 +60,11 @@ void Gun::update() {
 	reloadClock += frameTime;
 }
 
+float Gun::getAngle() {
+	float shift = randFloat(0.0f, spread) - spread / 2;
+	return angle + shift;
+}
+
 void Gun::drop() {
 	owner = nullptr;
 	angle = 0;
@@ -80,26 +86,28 @@ void Gun::render() {
 
 	if(owner) sprite.setPosition(owner->center());
 	sprite.setRotation(angle * RADIANS_TO_DEGREES);
-	window->draw(sprite);
+	Pickup::render();
 }
 
-void Gun::interact(GameObject *player) {
+bool Gun::interact(GameObject *player) {
 	if (Player *p = dynamic_cast<Player*>(player)) {
 		p->addItem(this);
 	}
+	return true;
 }
 
 GPistol::GPistol(GameObject *owner) : Gun(owner, 0.2f, 1.0f, 12, -1) {
 	sprite.setTexture(Images::get("pistol.png"));
 	sprite.setSize(vec2(40, 30));
 	speed = 600.0f;
+	spread = 0.32f;
 	origin();
 	name = "Pistol";
 }
 
 void GPistol::fire() {
 	Sounds::play("bullet.wav");
-	game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, angle));
+	game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, getAngle()));
 }
 
 GMinigun::GMinigun(GameObject *owner) : Gun(owner, 0.08f, 0, -1, 10000) {
@@ -112,7 +120,7 @@ GMinigun::GMinigun(GameObject *owner) : Gun(owner, 0.08f, 0, -1, 10000) {
 
 void GMinigun::fire() {
 	Sounds::play("bullet.wav");
-	game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, angle));
+	game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, getAngle()));
 }
 
 GShotgun::GShotgun(GameObject *owner) : Gun(owner, 0.6f, 1.4f, 6, 200) {
@@ -127,8 +135,7 @@ GShotgun::GShotgun(GameObject *owner) : Gun(owner, 0.6f, 1.4f, 6, 200) {
 void GShotgun::fire() {
 	Sounds::play("shotgun.wav");
 	for (int i = 0; i < 8; i++) {
-		float shift = randFloat(0.0f, spread) - spread / 2;
-		game->room->addBullet(new BHeavy(owner->type(), owner->center(), speed, angle + shift));
+		game->room->addBullet(new BHeavy(owner->type(), owner->center(), speed, getAngle()));
 	}
 }
 
@@ -142,7 +149,7 @@ GBubble::GBubble(GameObject *owner) : Gun(owner, 1.5f, 2.0f, 5, 50) {
 
 void GBubble::fire() {
 	Sounds::play("shotgun.wav");
-	game->room->addBullet(new BBubble(owner->type(), owner->center(), speed, angle));
+	game->room->addBullet(new BBubble(owner->type(), owner->center(), speed, getAngle()));
 }
 
 GGunGun::GGunGun(GameObject *owner) : Gun(owner, 0.6f, 1.2f, 6, 120) {
@@ -155,7 +162,7 @@ GGunGun::GGunGun(GameObject *owner) : Gun(owner, 0.6f, 1.2f, 6, 120) {
 
 void GGunGun::fire() {
 	Sounds::play("shotgun.wav");
-	game->room->addBullet(new BGun(owner->type(), owner->center(), speed, angle));
+	game->room->addBullet(new BGun(owner->type(), owner->center(), speed, getAngle()));
 }
 
 GSteveGun::GSteveGun(GameObject *owner) : Gun(owner, 2.0f, 3.0f, 6, 120) {
@@ -168,20 +175,21 @@ GSteveGun::GSteveGun(GameObject *owner) : Gun(owner, 2.0f, 3.0f, 6, 120) {
 
 void GSteveGun::fire() {
 	Sounds::play("shotgun.wav");
-	game->room->addBullet(new BSteve(owner->type(), owner->center(), speed, angle));
+	game->room->addBullet(new BSteve(owner->type(), owner->center(), speed, getAngle()));
 }
 
 GFlameThrower::GFlameThrower(GameObject *owner) : Gun(owner, 0.02f, 0, -1, 2000) {
 	sprite.setTexture(Images::get("flamethrower.png"));
 	sprite.setSize(vec2(80, 40));
 	speed = 800.0f;
+	spread = 0.32;
 	origin();
 	name = "Flame Thrower";
 }
 
 void GFlameThrower::fire() {
 	Sounds::play("flamethrower.wav");
-	game->room->addBullet(new BFlame(owner->type(), owner->center(), speed, angle));
+	game->room->addBullet(new BFlame(owner->type(), owner->center(), speed, getAngle()));
 }
 
 GHoming::GHoming(GameObject *owner) : Gun(owner, 0.15f, 0.8f, 16, 150) {
@@ -194,5 +202,5 @@ GHoming::GHoming(GameObject *owner) : Gun(owner, 0.15f, 0.8f, 16, 150) {
 
 void GHoming::fire() {
 	Sounds::play("bullet.wav");
-	game->room->addBullet(new BHoming(owner->type(), owner->center(), speed, angle));
+	game->room->addBullet(new BHoming(owner->type(), owner->center(), speed, getAngle()));
 }

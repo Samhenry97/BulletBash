@@ -24,10 +24,10 @@ Enemy::~Enemy() {
 	if (gun && (rand() % 10 == 1)) {
 		gun->drop();
 	} else {
-		if (rand() % 5 == 1) {
+		if (rand() % 20 == 1) {
 			game->room->addItem(new PAmmo(sprite.getPosition()));
 		} 
-		if (rand() % 5 == 1) {
+		if (rand() % 20 == 1) {
 			game->room->addItem(new PHealth(sprite.getPosition()));
 		}
 		delete gun;

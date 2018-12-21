@@ -24,6 +24,8 @@
 #define XBOX_BUTTONS 10
 #define XBOX_AXES 8
 
+#define XBOX_DEADZONE 15.0f
+
 class Xbox {
 private:
 	static std::vector<Xbox*> controllers;
