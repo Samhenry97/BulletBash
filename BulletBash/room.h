@@ -1,16 +1,19 @@
 #pragma once
+
 #include "const.h"
 #include "block.h"
 #include "enemy.h"
 #include "player.h"
 #include "bullet.h"
 #include "particle.h"
+#include "mapmanager.h"
 
 class Room : GameObject {
 protected:
 	int width, height, level;
 	bool finished;
-	std::vector<std::vector<Block*>> blocks;
+	std::vector<std::vector<Wall*>> blocks;
+	std::string roomType = "default";
 
 public:
 	std::vector<sf::RectangleShape> back;
@@ -20,7 +23,7 @@ public:
 	std::vector<ParticleSystem*> particles;
 	std::vector<Room*> adj;
 
-	Room(int width, int height, int level);
+	Room(int level, std::string roomType);
 	~Room();
 	virtual void update();
 	virtual void render();
@@ -48,13 +51,19 @@ private:
 	int waveCount, waveTotal;
 
 public:
-	REnemy(int width, int height, int level);
+	REnemy(int level);
 	void update();
 };
 
 class RChest : public Room {
 public:
 	RChest(int level);
+	void update();
+};
+
+class RBoss : public Room {
+public:
+	RBoss(int level);
 	void update();
 };
 

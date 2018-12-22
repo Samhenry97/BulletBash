@@ -35,6 +35,7 @@ public:
 	void sendButtonReleased(int id, int button);
 	void sendAxisMoved(int id, int axis, float pos);
 	void switchTo(State newState);
+	void addLight(vec2 pos, int radius);
 	int collision(GameObject *origin, vec2 point);
 	int blockCollision(vec2 point);
 	sf::FloatRect getViewBounds();

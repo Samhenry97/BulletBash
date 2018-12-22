@@ -93,8 +93,14 @@
     <ClInclude Include="pickup.h">
       <Filter>Header Files\entity</Filter>
     </ClInclude>
+    <ClInclude Include="animation.h">
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mapmanager.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
     <ClInclude Include="logger.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>Header Files\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="pickup.cpp">
       <Filter>Source Files\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="animation.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mapmanager.cpp">
+      <Filter>Source Files\core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

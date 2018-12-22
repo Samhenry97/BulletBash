@@ -1,16 +1,21 @@
 #pragma once
 
 #include "const.h"
+#include "animation.h"
 
 class GameObject {
+protected:
+	Animation *animation = nullptr;
+
 public:
 	sf::RectangleShape sprite;
 
 	GameObject();
 	GameObject(vec2 pos, vec2 size);
+	~GameObject();
 
 	virtual void render() = 0;
-	virtual void update() = 0;
+	virtual void update();
 	virtual void renderStatic();
 	virtual void renderMinimap();
 

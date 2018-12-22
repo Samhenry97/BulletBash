@@ -1,13 +1,19 @@
 #pragma once
 #include "gameobject.h"
-class Block : public GameObject {
+
+class Wall : public GameObject {
 private:
 	float y, x;
 
 public:
-	Block(float y, float x);
-	void update();
-	void render();
-	void renderMinimap();
+	Wall(vec2 pos);
+	virtual void update();
+	virtual void render();
+	virtual void renderMinimap();
 };
 
+class WFire : public Wall {
+public:
+	WFire(vec2 pos);
+	void render();
+};

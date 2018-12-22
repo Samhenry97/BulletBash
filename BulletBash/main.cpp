@@ -5,6 +5,7 @@
 #include "sounds.h"
 #include "util.h"
 #include "xbox.h"
+#include "mapmanager.h"
 
 void pollEvents(sf::RenderWindow &window) {
 	sf::Event e;
@@ -71,6 +72,12 @@ int main() {
 	display.setFramerateLimit(60);
 	display.setKeyRepeatEnabled(false);
 	window = &display;
+
+	sf::RenderTexture lightTexture;
+	lightTexture.create(WINDOW_WIDTH, WINDOW_HEIGHT);
+	lights = &lightTexture;
+	light.setTexture(Images::get("light.png"));
+
 	view = new sf::View(vec2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
 	minimap = new sf::View;
 	minimap->setViewport(sf::FloatRect(MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT));
@@ -86,6 +93,7 @@ int main() {
 	background.setSize(vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
 	background.setTexture(Images::get("background.png"));
 
+	Maps::init();
 	Sounds::init();
 	Xbox::init();
 	srand(time(0));
@@ -99,11 +107,15 @@ int main() {
 		frameTime = timer.restart().asSeconds();
 
 		display.clear(sf::Color::Black);
-		window->setView(window->getDefaultView());
-		window->draw(background);
-		window->setView(*view);
+		lightTexture.clear(sf::Color(40, 40, 40, 200));
+		display.setView(window->getDefaultView());
+		display.draw(background);
+		display.setView(*view);
 		game->render();
-		window->setView(window->getDefaultView());
+		display.setView(window->getDefaultView());
+		lightTexture.display();
+		sf::Sprite lightSprite(lightTexture.getTexture());
+		display.draw(lightSprite, sf::BlendMultiply);
 		game->renderStatic();
 		if (drawMinimap()) {
 			window->draw(minimapBackground);

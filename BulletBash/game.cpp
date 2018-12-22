@@ -47,6 +47,8 @@ void Game::nextFloor() {
 	rooms.clear();
 
 	// Generate the floor
+	int chests = 2;
+	bool boss = false;
 	rooms.push_back(new RChest(floor));
 	std::queue<GenNode> gen;
 	gen.push({ rooms[0], 0 });
@@ -56,7 +58,16 @@ void Game::nextFloor() {
 		int toadd = (rand() % (available.size() - 1)) + 1;
 		for (int i = 0; i < toadd; i++) {
 			int dir = available[rand() % available.size()];
-			Room *next = new REnemy(20, 20, node.level + 1);
+			Room *next;
+			if (rand() % 20 == 1 || (node.level == 3 && chests == 2) || (node.level == 5 && chests == 1)) {
+				next = new RChest(node.level + 1);
+				chests--;
+			} else if (node.level == 5 && !boss) {
+				next = new RBoss(node.level + 1);
+				boss = true;
+			} else {
+				next = new REnemy(node.level + 1);
+			}
 			rooms.push_back(next);
 			node.room->setRoom(next, dir);
 			next->setRoom(node.room, (dir + 2) % 4);
@@ -68,6 +79,9 @@ void Game::nextFloor() {
 	}
 
 	room = rooms[0];
+	for (int i = 0; i < totalPlayers; i++) {
+		players[i]->sprite.setPosition(rooms[0]->center());
+	}
 }
 
 void Game::switchTo(State newState) {
@@ -169,7 +183,10 @@ void Game::render() {
 		view->setCenter(center);
 		minimap->setCenter(center);
 		room->render();
-		for (Player* player : players) { player->render(); }
+		for (Player* player : players) { 
+			player->render();
+			addLight(player->sprite.getPosition(), 500);
+		}
 		break;
 
 	case GAMEOVER:
@@ -179,7 +196,7 @@ void Game::render() {
 }
 
 void Game::renderStatic() {
-	sf::Text levelText;
+	sf::Text levelText;	
 
 	switch (state) {
 	case START:
@@ -248,6 +265,13 @@ sf::FloatRect Game::getViewBounds() {
 	vec2 center = view->getCenter();
 	vec2 size = view->getSize();
 	return sf::FloatRect(center.x - size.x / 2, center.y - size.y / 2, size.x, size.y);
+}
+
+void Game::addLight(vec2 pos, int radius) {
+	light.setSize(vec2(radius * 2, radius * 2));
+	light.setOrigin(vec2(radius, radius));
+	light.setPosition(pos - view->getCenter() + vec2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
+	lights->draw(light, sf::BlendAdd);
 }
 
 int Game::collision(GameObject *origin, vec2 point) {

@@ -9,6 +9,10 @@ GameObject::GameObject(vec2 pos, vec2 size) {
 	sprite.setSize(size);
 }
 
+GameObject::~GameObject() {
+	delete animation;
+}
+
 bool GameObject::intersects(GameObject &other) {
 	return sprite.getGlobalBounds().intersects(other.sprite.getGlobalBounds());
 }
@@ -39,6 +43,12 @@ void GameObject::origin() {
 
 int GameObject::type() {
 	return BULLET_ENEMY;
+}
+
+void GameObject::update() {
+	if (animation) {
+		animation->update();
+	}
 }
 
 void GameObject::renderStatic() {

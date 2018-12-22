@@ -6,6 +6,8 @@
 #include "game.h"
 
 extern sf::RenderWindow *window;
+extern sf::RenderTexture *lights;
+extern sf::RectangleShape light;
 extern sf::View *view;
 extern sf::View *minimap;
 extern Game *game;

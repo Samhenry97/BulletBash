@@ -206,7 +206,7 @@ EBasic::EBasic(vec2 pos) : Enemy(pos) {
 	baseSpeed = speed = 100.0f;
 	health = maxHealth = 120;
 	gun = new GPistol(this);
-	gun->fireTime = 1.0f;
+	gun->speed = 1.0f;
 }
 
 EAlien::EAlien(vec2 pos) : Enemy(pos) {

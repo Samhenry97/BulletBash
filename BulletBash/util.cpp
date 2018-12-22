@@ -1,6 +1,8 @@
 #include "util.h"
 
 sf::RenderWindow *window = nullptr;
+sf::RenderTexture *lights = nullptr;
+sf::RectangleShape light;
 sf::View *view = nullptr;
 sf::View *minimap = nullptr;
 Game *game = nullptr;

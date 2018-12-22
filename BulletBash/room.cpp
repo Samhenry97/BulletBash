@@ -4,32 +4,54 @@
 #include "util.h"
 #include "pickup.h"
 
-Room::Room(int width, int height, int level) {
-	std::string image = "room/back" + STR((rand() % MAX_ROOM_BACK) + 1) + ".png";
-	Images::get(image)->setRepeated(true);
-	sprite.setTexture(Images::get(image));
-	sprite.setTextureRect(sf::IntRect(0, 0, width * BLOCK_SIZE, height * BLOCK_SIZE));
-	sprite.setSize(vec2(width * BLOCK_SIZE, height * BLOCK_SIZE));
-
+Room::Room(int level, std::string roomType) {
+	// General setup
+	this->roomType = roomType;
 	adj = std::vector<Room*>(4, nullptr);
 
-	this->width = width;
-	this->height = height;
+	// Which map will we use?
+	auto roomMap = Maps::loadTemplate(roomType);
 	this->level = level;
+	
+	// Reserve space for the map
+	height = roomMap.size() + 2;
+	width = roomMap[0].size() + 2;
 	blocks.resize(height);
 	for (int i = 0; i < height; i++) {
 		blocks[i].resize(width);
 	}
 
+	// Generate the sides of the room
 	for (int i = 0; i < width; i++) {
-		blocks[0][i] = new Block(0.0f, i * BLOCK_SIZE);
-		blocks[height - 1][i] = new Block((height - 1) * BLOCK_SIZE, i * BLOCK_SIZE);
+		blocks[0][i] = new Wall(vec2(i * BLOCK_SIZE, 0));
+		blocks[height - 1][i] = new Wall(vec2(i * BLOCK_SIZE, (height - 1) * BLOCK_SIZE));
+	}
+	for (int i = 1; i < height - 1; i++) {
+		blocks[i][0] = new Wall(vec2(0, i * BLOCK_SIZE));
+		blocks[i][width - 1] = new Wall(vec2((width - 1) * BLOCK_SIZE, i * BLOCK_SIZE));
 	}
 
-	for (int i = 1; i < height - 1; i++) {
-		blocks[i][0] = new Block(i * BLOCK_SIZE, 0.0f);
-		blocks[i][width - 1] = new Block(i * BLOCK_SIZE, (width - 1) * BLOCK_SIZE);
+	// Now build the map
+	for (int y = 1; y < roomMap.size() + 1; y++) {
+		for (int x = 1; x < roomMap[y - 1].size() + 1; x++) {
+			vec2 pos(x * BLOCK_SIZE, y * BLOCK_SIZE);
+			switch (roomMap[y - 1][x - 1]) {
+			case 'b':
+				blocks[y][x] = new Wall(pos);
+				break;
+			case 'f':
+				blocks[y][x] = new WFire(pos);
+				break;
+			}
+		}
 	}
+
+	// Now generate the sprite
+	std::string image = "room/back" + STR((rand() % MAX_ROOM_BACK) + 1) + ".png";
+	Images::get(image)->setRepeated(true);
+	sprite.setTexture(Images::get(image));
+	sprite.setTextureRect(sf::IntRect(0, 0, width * BLOCK_SIZE, height * BLOCK_SIZE));
+	sprite.setSize(vec2(width * BLOCK_SIZE, height * BLOCK_SIZE));
 }
 
 Room::~Room() {
@@ -41,10 +63,10 @@ Room::~Room() {
 	for (int i = 0; i < items.size(); i++) delete items[i];
 	for (int i = 0; i < bullets.size(); i++) delete bullets[i];
 	for (int i = 0; i < enemies.size(); i++) delete enemies[i];
+	for (int i = 0; i < particles.size(); i++) { delete particles[i]; }
 }
 
 void Room::update() {
-
 	for (int y = 0; y < blocks.size(); y++) {
 		for (int x = 0; x < blocks[y].size(); x++) {
 			if (blocks[y][x]) blocks[y][x]->update();
@@ -312,7 +334,7 @@ void Room::finish() {
 	}
 }
 
-REnemy::REnemy(int width, int height, int level) : Room(width, height, level) {
+REnemy::REnemy(int level) : Room(level, "enemy") {
 	waveTotal = rand() % 3 + 1;
 }
 
@@ -321,17 +343,11 @@ void REnemy::update() {
 	if (enemies.empty()) {
 		if (waveCount <= waveTotal) {
 			waveCount++;
-			if (level % 5 == 0) {
+			int count = (rand() % 5) + 3;
+			for (int i = 0; i < count; i++) {
 				float x = rand() % (width - 2) + 1;
 				float y = rand() % (height - 2) + 1;
-				enemies.push_back(BOSS_ENEMIES[rand() % BOSS_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
-			} else {
-				int count = (rand() % 5) + 3;
-				for (int i = 0; i < count; i++) {
-					float x = rand() % (width - 2) + 1;
-					float y = rand() % (height - 2) + 1;
-					enemies.push_back(NORMAL_ENEMIES[rand() % NORMAL_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
-				}
+				enemies.push_back(NORMAL_ENEMIES[rand() % NORMAL_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
 			}
 		} else {
 			finish();
@@ -339,7 +355,20 @@ void REnemy::update() {
 	}
 }
 
-RChest::RChest(int level) : Room(10, 10, level) {
+RBoss::RBoss(int level) : Room(level, "enemy") {
+	float x = rand() % (width - 2) + 1;
+	float y = rand() % (height - 2) + 1;
+	enemies.push_back(BOSS_ENEMIES[rand() % BOSS_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
+}
+
+void RBoss::update() {
+	Room::update();
+	if (enemies.empty()) {
+		finish();
+	}
+}
+
+RChest::RChest(int level) : Room(level, "chest") {
 	sf::RectangleShape platform;
 	platform.setSize(vec2(BLOCK_SIZE * 4, BLOCK_SIZE * 4));
 	platform.setOrigin(vec2(BLOCK_SIZE * 2, BLOCK_SIZE * 2));
