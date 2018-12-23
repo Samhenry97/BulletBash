@@ -31,6 +31,7 @@ public:
 	virtual void render();
 	virtual void renderStatic();
 	virtual void renderMinimap();
+	virtual void finish();
 	void interact(Player *player);
 	Pickup *addItem(Pickup *item);
 	Bullet *addBullet(Bullet *bullet);
@@ -40,7 +41,6 @@ public:
 	int collision(GameObject *origin, vec2 point);
 	bool complete();
 	void setRoom(Room *nextRoom, int dir);
-	void finish();
 	vec2 spawnLocation(int dir);
 	vec2 center();
 	void pathfind(std::vector<vec2i> &path, GameObject *src, GameObject *dest);
@@ -64,9 +64,14 @@ public:
 };
 
 class RBoss : public Room {
+private:
+	PNextFloor *nextFloor;
+
 public:
 	RBoss(vec2 pos);
 	void update();
+	void start();
+	void finish();
 	void renderMinimap();
 };
 

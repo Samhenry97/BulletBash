@@ -52,3 +52,10 @@ public:
 	bool interact(GameObject *player);
 	void enable();
 };
+
+class PNextFloor : public Pickup {
+public:
+	PNextFloor(vec2 pos);
+	bool interact(GameObject *player);
+	void enable();
+};

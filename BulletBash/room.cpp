@@ -379,16 +379,32 @@ void REnemy::update() {
 	}
 }
 
-RBoss::RBoss(vec2 pos) : Room(pos, "enemy") {
+RBoss::RBoss(vec2 pos) : Room(pos, "boss") {
 	float x = rand() % (width - 2) + 1;
 	float y = rand() % (height - 2) + 1;
 	enemies.push_back(BOSS_ENEMIES[rand() % BOSS_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
+
+	nextFloor = new PNextFloor(center());
+	items.push_back(nextFloor);
 }
 
 void RBoss::update() {
 	Room::update();
 	if (enemies.empty()) {
 		finish();
+	}
+}
+
+void RBoss::start() {
+	Room::start();
+	Sounds::boss();
+}
+
+void RBoss::finish() {
+	if (!finished) {
+		Room::finish();
+		nextFloor->enable();
+		Sounds::back();
 	}
 }
 

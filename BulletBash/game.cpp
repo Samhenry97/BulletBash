@@ -20,6 +20,7 @@ Game::Game() {
 	pauseMenu = new PauseMenu();
 	characterMenu = new CharacterMenu();
 	gameOverMenu = new GameOverMenu();
+	endGameMenu = new EndGameMenu();
 	switchTo(START);
 
 	NORMAL_ENEMIES.push_back(&CREATE_ENEMY<EBasic>);
@@ -35,13 +36,18 @@ Game::~Game() {
 }
 
 void Game::start() {
+	switchTo(INGAME);
 	nextFloor();
 	for (Player *player : players) { player->health = player->maxHealth; }
-	switchTo(INGAME);
 }
 
 void Game::nextFloor() {
 	floor++;
+	if (floor == 6) {
+		switchTo(END_GAME);
+		return;
+	}
+
 	Logger::info("Generating floor " + STR(floor));
 	for (int y = 0; y < rooms.size(); y++) {
 		for (int x = 0; x < rooms[y].size(); x++) {
@@ -139,6 +145,8 @@ void Game::switchTo(State newState) {
 		break;
 	case GAMEOVER:
 		break;
+	case END_GAME:
+		break;
 	}
 
 	state = newState;
@@ -155,6 +163,8 @@ void Game::switchTo(State newState) {
 	case PAUSED:
 		break;
 	case GAMEOVER:
+		break;
+	case END_GAME:
 		break;
 	}
 }
@@ -196,6 +206,10 @@ void Game::update() {
 
 	case GAMEOVER:
 		gameOverMenu->update();
+		break;
+
+	case END_GAME:
+		endGameMenu->update();
 		break;
 	}
 }
@@ -245,6 +259,10 @@ void Game::render() {
 	case GAMEOVER:
 		gameOverMenu->render();
 		break;
+
+	case END_GAME:
+		endGameMenu->render();
+		break;
 	}
 }
 
@@ -279,6 +297,10 @@ void Game::renderStatic() {
 
 	case GAMEOVER:
 		gameOverMenu->renderStatic();
+		break;
+
+	case END_GAME:
+		endGameMenu->renderStatic();
 		break;
 	}
 }
@@ -381,7 +403,7 @@ void Game::sendButtonReleased(int id, int button) {
 void Game::sendAxisMoved(int id, int axis, float pos) {
 	if (state == INGAME && axis == XBOX_TRIGGERS && pos > 0.1f) {
 		minimapController = id;
-		minimapCenter = vec2(room->pos.x * MINIMAP_ROOM_SIZE, room->pos.y * MINIMAP_ROOM_SIZE);
+		minimapCenter = vec2(room->pos.x * MINIMAP_ROOM_SIZE + MINIMAP_ROOM_DRAW / 2, room->pos.y * MINIMAP_ROOM_SIZE + MINIMAP_ROOM_DRAW / 2);
 		switchTo(MINIMAP);
 	} else if (state == MINIMAP && id == minimapController) {
 		if (axis == XBOX_TRIGGERS && pos > -0.1f && pos < 0.1f) {

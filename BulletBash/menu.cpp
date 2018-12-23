@@ -334,3 +334,41 @@ void GameOverMenu::click() {
 		game->switchTo(Game::START);
 	}
 }
+
+EndGameMenu::EndGameMenu() {
+	winText.setCharacterSize(80);
+	winText.setFont(Fonts::get("Sheeping Cats.otf"));
+	winText.setFillColor(sf::Color::Red);
+	winText.setOutlineColor(sf::Color::White);
+	winText.setOutlineThickness(8.0f);
+	winText.setString("DUNGEON COMPLETE");
+	winText.setOrigin(winText.getLocalBounds().width / 2, winText.getLocalBounds().height / 2);
+	winText.setPosition(WINDOW_WIDTH / 2, 200);
+
+	restartButton = new MenuButton("Quick Restart");
+	mainButton = new MenuButton("Main Menu");
+
+	buttons.push_back(restartButton);
+	buttons.push_back(mainButton);
+
+	int y = WINDOW_HEIGHT / 2;
+	for (int i = 0; i < buttons.size(); i++) {
+		buttons[i]->sprite.setPosition(WINDOW_WIDTH / 2, y);
+		y += 120;
+	}
+
+	buttons[0]->select();
+}
+
+void EndGameMenu::renderStatic() {
+	window->draw(winText);
+	Menu::renderStatic();
+}
+
+void EndGameMenu::click() {
+	if (buttons[selected] == restartButton) {
+		game->start();
+	} else if (buttons[selected] == mainButton) {
+		game->switchTo(Game::START);
+	}
+}

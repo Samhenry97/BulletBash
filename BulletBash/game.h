@@ -13,10 +13,11 @@ private:
 	PauseMenu *pauseMenu;
 	CharacterMenu *characterMenu;
 	GameOverMenu *gameOverMenu;
+	EndGameMenu *endGameMenu;
 	int floor;
 
 public:
-	enum State { START, CHARACTER, PAUSED, MINIMAP, INGAME, GAMEOVER } state;
+	enum State { START, CHARACTER, PAUSED, MINIMAP, INGAME, GAMEOVER, END_GAME } state;
 	Room *room;
 	bool minimapZoomed = true;
 	int minimapController;

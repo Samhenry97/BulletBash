@@ -14,6 +14,7 @@ Pickup::Pickup(vec2 pos) {
 }
 
 void Pickup::update() {
+	GameObject::update();
 	if (scaleDir == 1) {
 		scale += scaleSpeed * frameTime;
 		if (scale >= 2.0f) { scaleDir = -scaleDir; }
@@ -116,5 +117,28 @@ bool PDoor::interact(GameObject *player) {
 
 void PDoor::enable() {
 	sprite.setTexture(Images::get("teleporteropen.png"));
+	interacted = false;
+}
+
+PNextFloor::PNextFloor(vec2 pos) : Pickup(pos) {
+	animation = new Animation(&sprite, vec2(200, 300), 6, 2.0f);
+	animation->setTimes(1);
+	animation->stop();
+	sprite.setSize(vec2(200, 300));
+	sprite.setOrigin(100, 150);
+	sprite.setTexture(Images::get("nextfloor.png"));
+	scaleSpeed = 0.0f;
+	interacted = true;
+}
+
+bool PNextFloor::interact(GameObject *player) {
+	if (!interacted) {
+		game->nextFloor();
+	}
+	return false;
+}
+
+void PNextFloor::enable() {
+	animation->start();
 	interacted = false;
 }

@@ -7,7 +7,8 @@ namespace Maps {
 	std::vector<std::string> names = {
 		"default",
 		"chest",
-		"enemy"
+		"enemy",
+		"boss"
 	};
 
 	void init() {

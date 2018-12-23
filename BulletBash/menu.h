@@ -85,3 +85,16 @@ public:
 	void renderStatic();
 	void click();
 };
+
+class EndGameMenu : public Menu {
+private:
+	MenuButton *restartButton;
+	MenuButton *mainButton;
+
+	sf::Text winText;
+
+public:
+	EndGameMenu();
+	void renderStatic();
+	void click();
+};
