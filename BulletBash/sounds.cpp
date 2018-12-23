@@ -16,7 +16,7 @@ namespace Sounds {
 		for (std::string name : names) {
 			sf::SoundBuffer buff;
 			if (!buff.loadFromFile("sounds/" + name)) {
-				Logger::fatal("Couldn't load sound: " + name);
+				Logger::fatal("Could not load sound: " + name);
 			}
 			sounds[name] = buff;
 		}

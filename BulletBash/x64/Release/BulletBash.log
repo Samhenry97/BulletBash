@@ -1,7 +1,40 @@
-﻿  enemy.cpp
+﻿  game.cpp
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(17): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(83): warning C4244: 'argument': conversion from 'T' to 'const unsigned __int64', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(118): warning C4244: 'argument': conversion from 'T' to 'const unsigned __int64', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(234): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(345): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(346): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(364): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(365): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(393): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Generating code
-  7 of 3838 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  2 of 3968 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   BulletBash.vcxproj -> C:\Users\Sam\GoogleDrive\Documents\Programming\BulletBash\x64\Release\BulletBash.exe

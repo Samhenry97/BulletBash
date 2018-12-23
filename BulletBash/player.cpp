@@ -100,8 +100,8 @@ void Player::update() {
 	if (y > 0 && (game->collision(this, vec2(curx, cury + height + y)) || game->collision(this, vec2(curx + width, cury + height + y)))) y = 0;
 	sprite.move(vec2(x, y));
 
-	float dx = Xbox::getAxis(controller, XBOX_RX);
-	float dy = Xbox::getAxis(controller, XBOX_RY);
+	float dx = Xbox::getAxis(controller, XBOX_RX, false);
+	float dy = Xbox::getAxis(controller, XBOX_RY, false);
 	float angle = atan2(dy, dx);
 	if (dx == 0.0f && dy == 0.0f) angle = dir == 1 ? 0 : 3.14;
 

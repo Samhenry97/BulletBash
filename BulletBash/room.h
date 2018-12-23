@@ -10,10 +10,9 @@
 
 class Room : GameObject {
 protected:
-	int width, height, level;
-	bool finished;
 	std::vector<std::vector<Wall*>> blocks;
 	std::string roomType = "default";
+	int width, height;
 
 public:
 	std::vector<sf::RectangleShape> back;
@@ -22,9 +21,12 @@ public:
 	std::vector<Bullet*> bullets;
 	std::vector<ParticleSystem*> particles;
 	std::vector<Room*> adj;
+	vec2 pos;
+	bool visited, finished;
 
-	Room(int level, std::string roomType);
+	Room(vec2 pos, std::string roomType);
 	~Room();
+	virtual void start();
 	virtual void update();
 	virtual void render();
 	virtual void renderStatic();
@@ -41,7 +43,6 @@ public:
 	void finish();
 	vec2 spawnLocation(int dir);
 	vec2 center();
-	std::vector<int> availableDirs();
 	void pathfind(std::vector<vec2i> &path, GameObject *src, GameObject *dest);
 	GameObject *nearestEnemy(GameObject *object);
 };
@@ -51,20 +52,22 @@ private:
 	int waveCount, waveTotal;
 
 public:
-	REnemy(int level);
+	REnemy(vec2 pos);
 	void update();
 };
 
 class RChest : public Room {
 public:
-	RChest(int level);
+	RChest(vec2 pos);
 	void update();
+	void renderMinimap();
 };
 
 class RBoss : public Room {
 public:
-	RBoss(int level);
+	RBoss(vec2 pos);
 	void update();
+	void renderMinimap();
 };
 
 struct Node {
@@ -82,9 +85,4 @@ struct Node {
 	bool operator==(const Node &other) const {
 		return y == other.y && x == other.x;
 	}
-};
-
-struct GenNode {
-	Room *room;
-	int level;
 };

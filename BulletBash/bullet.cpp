@@ -33,10 +33,16 @@ void Bullet::update() {
 	float x = speed * frameTime * cos(moveAngle);
 	float y = speed * frameTime * sin(moveAngle);
 	vec2 move = vec2(x, y);
-	if (game->blockCollision(sprite.getTransform().transformPoint(vec2(0, 0)) + move)) kill();
-	if (game->blockCollision(sprite.getTransform().transformPoint(vec2(sprite.getSize().x, 0)) + move)) kill();
-	if (game->blockCollision(sprite.getTransform().transformPoint(vec2(0, sprite.getSize().y)) + move)) kill();
-	if (game->blockCollision(sprite.getTransform().transformPoint(vec2(sprite.getSize().x, sprite.getSize().y)) + move)) kill();
+	std::vector<vec2> transform = {
+		sprite.getTransform().transformPoint(vec2(0, 0)) + move,
+		sprite.getTransform().transformPoint(vec2(sprite.getSize().x, 0)) + move,
+		sprite.getTransform().transformPoint(vec2(0, sprite.getSize().y)) + move,
+		sprite.getTransform().transformPoint(vec2(sprite.getSize().x, sprite.getSize().y)) + move
+	};
+	for (int i = 0; i < transform.size(); i++) {
+		if (game->blockCollision(transform[i])) kill();
+	}
+	
 	dist += hypot(y, x);
 	sprite.move(move);
 }
@@ -58,6 +64,7 @@ BBasic::BBasic(int type, vec2 pos, float speed, float angle) : Bullet(type, pos,
 	sprite.setTexture(Images::get("bullet.png"));
 	sprite.setSize(vec2(30, 30));
 	damage = 20;
+	bouncy = true;
 	origin();
 }
 

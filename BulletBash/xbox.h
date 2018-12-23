@@ -46,7 +46,7 @@ public:
 	static void setButton(int controller, int button, bool state);
 	static bool buttonDown(int controller, int button);
 	static void setAxis(int controller, int axis, float pos);
-	static float getAxis(int controller, int axis);
+	static float getAxis(int controller, int axis, bool deadzone=true);
 	static void setConnected(int controller, bool state);
 	static bool isConnected(int controller);
 

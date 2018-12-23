@@ -7,7 +7,7 @@ protected:
 	float maxDist, dist = 0;
 
 public:
-	bool splash, homing;
+	bool splash, homing, bouncy;
 	int damage, type;
 
 	Bullet(int type, vec2 pos, float speed, float angle);

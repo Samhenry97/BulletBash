@@ -4,16 +4,14 @@
 #include "util.h"
 #include "pickup.h"
 
-Room::Room(int level, std::string roomType) {
+Room::Room(vec2 pos, std::string roomType) {
 	// General setup
 	this->roomType = roomType;
+	this->pos = pos;
 	adj = std::vector<Room*>(4, nullptr);
-
-	// Which map will we use?
-	auto roomMap = Maps::loadTemplate(roomType);
-	this->level = level;
 	
-	// Reserve space for the map
+	// Choose and reserve space for the map
+	auto roomMap = Maps::loadTemplate(roomType);
 	height = roomMap.size() + 2;
 	width = roomMap[0].size() + 2;
 	blocks.resize(height);
@@ -64,6 +62,10 @@ Room::~Room() {
 	for (int i = 0; i < bullets.size(); i++) delete bullets[i];
 	for (int i = 0; i < enemies.size(); i++) delete enemies[i];
 	for (int i = 0; i < particles.size(); i++) { delete particles[i]; }
+}
+
+void Room::start() {
+	visited = true;
 }
 
 void Room::update() {
@@ -127,19 +129,9 @@ void Room::render() {
 			if (blocks[y][x]) blocks[y][x]->render();
 		}
 	}
-	for (Enemy *enemy : enemies) { enemy->render(); }
-	for (Bullet* bullet : bullets) { bullet->render(); }
 	for (GameObject *item : items) { item->render(); }
-}
-
-std::vector<int> Room::availableDirs() {
-	std::vector<int> ret;
-	for (int i = 0; i < adj.size(); i++) {
-		if (!adj[i]) {
-			ret.push_back(i);
-		}
-	}
-	return ret;
+	for (Bullet* bullet : bullets) { bullet->render(); }
+	for (Enemy *enemy : enemies) { enemy->render(); }
 }
 
 vec2 Room::center() {
@@ -153,17 +145,49 @@ void Room::renderStatic() {
 }
 
 void Room::renderMinimap() {
-	sf::RectangleShape back;
-	back.setFillColor(sf::Color(50, 50, 50));
-	back.setSize(vec2(width * BLOCK_SIZE, height * BLOCK_SIZE));
-	window->draw(back);
-	for (int y = 0; y < blocks.size(); y++) {
-		for (int x = 0; x < blocks[y].size(); x++) {
-			if (blocks[y][x]) blocks[y][x]->renderMinimap();
+	if (game->minimapZoomed) {
+		sf::RectangleShape back;
+		back.setFillColor(sf::Color(50, 50, 50));
+		back.setSize(vec2(width * BLOCK_SIZE, height * BLOCK_SIZE));
+		window->draw(back);
+		for (int y = 0; y < blocks.size(); y++) {
+			for (int x = 0; x < blocks[y].size(); x++) {
+				if (blocks[y][x]) blocks[y][x]->renderMinimap();
+			}
 		}
+		for (Enemy *enemy : enemies) { enemy->renderMinimap(); }
+		for (GameObject *item : items) { item->renderMinimap(); }
+	} else {
+		sf::RectangleShape connection;
+		connection.setFillColor(sf::Color(50, 50, 50));
+		connection.setSize(vec2(MINIMAP_ROOM_PAD, MINIMAP_ROOM_PAD));
+		if (adj[DIR_DOWN]) {
+			connection.setPosition(pos.x * MINIMAP_ROOM_SIZE + MINIMAP_ROOM_DRAW / 2 - MINIMAP_ROOM_PAD / 2, pos.y * MINIMAP_ROOM_SIZE + MINIMAP_ROOM_DRAW);
+			window->draw(connection);
+		}
+		if (adj[DIR_RIGHT]) {
+			connection.setPosition(pos.x * MINIMAP_ROOM_SIZE + MINIMAP_ROOM_DRAW, pos.y * MINIMAP_ROOM_SIZE + MINIMAP_ROOM_DRAW / 2 - MINIMAP_ROOM_PAD / 2);
+			window->draw(connection);
+		}
+
+		int x = game->minimapCenter.x / MINIMAP_ROOM_SIZE;
+		int y = game->minimapCenter.y / MINIMAP_ROOM_SIZE;
+		sf::RectangleShape back;
+		if (game->room == this) {
+			back.setFillColor(sf::Color::Green);
+		} else if (visited) {
+			back.setFillColor(sf::Color::Blue);
+		} else {
+			back.setFillColor(sf::Color(50, 50, 50));
+		}
+		if (x == pos.x && y == pos.y) {
+			back.setOutlineColor(sf::Color::White);
+			back.setOutlineThickness(4.0f);
+		}
+		back.setSize(vec2(MINIMAP_ROOM_DRAW, MINIMAP_ROOM_DRAW));
+		back.setPosition(pos.x * MINIMAP_ROOM_SIZE, pos.y * MINIMAP_ROOM_SIZE);
+		window->draw(back);
 	}
-	for (Enemy *enemy : enemies) { enemy->renderMinimap(); }
-	for (GameObject *item : items) { item->renderMinimap(); }
 }
 
 int Room::blockCollision(vec2 point) {
@@ -334,7 +358,7 @@ void Room::finish() {
 	}
 }
 
-REnemy::REnemy(int level) : Room(level, "enemy") {
+REnemy::REnemy(vec2 pos) : Room(pos, "enemy") {
 	waveTotal = rand() % 3 + 1;
 }
 
@@ -355,7 +379,7 @@ void REnemy::update() {
 	}
 }
 
-RBoss::RBoss(int level) : Room(level, "enemy") {
+RBoss::RBoss(vec2 pos) : Room(pos, "enemy") {
 	float x = rand() % (width - 2) + 1;
 	float y = rand() % (height - 2) + 1;
 	enemies.push_back(BOSS_ENEMIES[rand() % BOSS_ENEMIES.size()](vec2(x * BLOCK_SIZE, y * BLOCK_SIZE)));
@@ -368,7 +392,16 @@ void RBoss::update() {
 	}
 }
 
-RChest::RChest(int level) : Room(level, "chest") {
+void RBoss::renderMinimap() {
+	Room::renderMinimap();
+	sf::RectangleShape shape;
+	shape.setTexture(Images::get("ram.png"));
+	shape.setSize(vec2(MINIMAP_ROOM_SIZE / 4, MINIMAP_ROOM_SIZE / 4));
+	shape.setPosition(vec2(pos.x * MINIMAP_ROOM_SIZE + 250, pos.y * MINIMAP_ROOM_SIZE + 250));
+	window->draw(shape);
+}
+
+RChest::RChest(vec2 pos) : Room(pos, "chest") {
 	sf::RectangleShape platform;
 	platform.setSize(vec2(BLOCK_SIZE * 4, BLOCK_SIZE * 4));
 	platform.setOrigin(vec2(BLOCK_SIZE * 2, BLOCK_SIZE * 2));
@@ -383,4 +416,13 @@ RChest::RChest(int level) : Room(level, "chest") {
 void RChest::update() {
 	Room::update();
 	finish();
+}
+
+void RChest::renderMinimap() {
+	Room::renderMinimap();
+	sf::RectangleShape shape;
+	shape.setTexture(Images::get("chest/chest1.png"));
+	shape.setSize(vec2(MINIMAP_ROOM_SIZE / 4, MINIMAP_ROOM_SIZE / 4));
+	shape.setPosition(vec2(pos.x * MINIMAP_ROOM_SIZE + 250, pos.y * MINIMAP_ROOM_SIZE + 250));
+	window->draw(shape);
 }

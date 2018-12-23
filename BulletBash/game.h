@@ -16,10 +16,13 @@ private:
 	int floor;
 
 public:
-	enum State { START, CHARACTER, PAUSED, INGAME, GAMEOVER } state;
+	enum State { START, CHARACTER, PAUSED, MINIMAP, INGAME, GAMEOVER } state;
 	Room *room;
+	bool minimapZoomed = true;
+	int minimapController;
+	vec2 minimapCenter;
 	std::vector<Player*> players;
-	std::vector<Room*> rooms;
+	std::vector<std::vector<Room*>> rooms;
 	std::map<int, Player*> playerControllers;
 
 	Game();
@@ -29,6 +32,7 @@ public:
 	void renderMinimap();
 	void update();
 	void transport(int dir);
+	void transportToRoom(Room *room);
 	void nextFloor();
 	void start();
 	void sendButtonPressed(int id, int button);
@@ -36,8 +40,16 @@ public:
 	void sendAxisMoved(int id, int axis, float pos);
 	void switchTo(State newState);
 	void addLight(vec2 pos, int radius);
+	std::vector<int> availableDirs(vec2 pos);
+	vec2 getPos(vec2 pos, int dir);
 	int collision(GameObject *origin, vec2 point);
 	int blockCollision(vec2 point);
 	sf::FloatRect getViewBounds();
 	Player *nearestPlayer(GameObject *object);
+};
+
+struct GenNode {
+	Room *room;
+	vec2 pos;
+	int level;
 };

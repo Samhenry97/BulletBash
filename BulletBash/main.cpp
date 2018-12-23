@@ -41,29 +41,19 @@ void pollEvents(sf::RenderWindow &window) {
 			Xbox::setConnected(id, false);
 			break;
 		case sf::Event::LostFocus:
-			Logger::info("Lost focus!");
+			Logger::info("Lost Focus!");
+			if (game->state == Game::INGAME) {
+				game->switchTo(Game::PAUSED);
+			}
 			break;
 		case sf::Event::GainedFocus:
-			Logger::info("Gained focus!");
-			break;
-		case sf::Event::Resized:
-			Logger::info("Resized!");
+			Logger::info("Gained Focus!");
 			break;
 		case sf::Event::KeyPressed:
 			Logger::info("Key pressed!");
 			break;
 		}
 	}
-}
-
-bool drawMinimap() {
-	for (int i = 0; i < 4; i++) {
-		if (Xbox::isConnected(i)) {
-			float angle = Xbox::getAxis(i, XBOX_TRIGGERS);
-			if (angle > 0.1f) return true;
-		}
-	}
-	return false;
 }
 
 int main() {
@@ -117,7 +107,7 @@ int main() {
 		sf::Sprite lightSprite(lightTexture.getTexture());
 		display.draw(lightSprite, sf::BlendMultiply);
 		game->renderStatic();
-		if (drawMinimap()) {
+		if (game->state == Game::MINIMAP) {
 			window->draw(minimapBackground);
 			window->setView(*minimap);
 			game->renderMinimap();

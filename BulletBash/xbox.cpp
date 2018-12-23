@@ -45,10 +45,10 @@ bool Xbox::buttonDown(int controller, int button) {
 	return false;
 }
 
-float Xbox::getAxis(int controller, int axis) {
+float Xbox::getAxis(int controller, int axis, bool deadzone) {
 	if (bounds(controller) && axisBounds(axis)) {
 		float val = controllers[controller]->axes[axis];
-		if (-XBOX_DEADZONE <= val && val <= XBOX_DEADZONE) {
+		if (deadzone && -XBOX_DEADZONE <= val && val <= XBOX_DEADZONE) {
 			return 0.0f;
 		} else {
 			return val;

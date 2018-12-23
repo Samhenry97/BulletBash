@@ -109,6 +109,9 @@ void Enemy::update() {
 
 		if (gun) {
 			if (smart) {
+				// Here, we run a binary search on up to 100 seconds of time
+				// to find the optimal angle to fire in the direction where
+				// the player WILL be when the bullet collides
 				float bottom = 0.0f, top = 100.0f;
 				float mid = (bottom + top) / 2;
 				for (int i = 0; i < 25; i++) {
@@ -206,7 +209,7 @@ EBasic::EBasic(vec2 pos) : Enemy(pos) {
 	baseSpeed = speed = 100.0f;
 	health = maxHealth = 120;
 	gun = new GPistol(this);
-	gun->speed = 1.0f;
+	gun->fireTime = 1.0f;
 }
 
 EAlien::EAlien(vec2 pos) : Enemy(pos) {
