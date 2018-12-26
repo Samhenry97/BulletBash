@@ -64,3 +64,15 @@ class BHoming : public Bullet {
 public:
 	BHoming(int type, vec2 pos, float speed, float angle);
 };
+
+class BLine : public Bullet {
+private:
+	vec2 endPos;
+	float animTime, killTime;
+
+public:
+	BLine(int type, vec2 pos, float angle);
+	void update();
+	void render();
+	bool intersects(GameObject *other);
+};

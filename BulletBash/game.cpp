@@ -23,8 +23,10 @@ Game::Game() {
 	endGameMenu = new EndGameMenu();
 	switchTo(START);
 
-	NORMAL_ENEMIES.push_back(&CREATE_ENEMY<EBasic>);
 	NORMAL_ENEMIES.push_back(&CREATE_ENEMY<EAlien>);
+	NORMAL_ENEMIES.push_back(&CREATE_ENEMY<EBasic>);
+	NORMAL_ENEMIES.push_back(&CREATE_ENEMY<EChomp>);
+	NORMAL_ENEMIES.push_back(&CREATE_ENEMY<EShell>);
 	NORMAL_ENEMIES.push_back(&CREATE_ENEMY<ESlime>);
 	BOSS_ENEMIES.push_back(&CREATE_ENEMY<ERamBoss>);
 	BOSS_ENEMIES.push_back(&CREATE_ENEMY<EEyeBoss>);
@@ -90,6 +92,16 @@ void Game::nextFloor() {
 			node.room->setRoom(next, dir);
 			next->setRoom(node.room, (dir + 2) % 4);
 			available.erase(find(available.begin(), available.end(), dir));
+
+			for (int i = 0; i < 4; i++) {
+				vec2 adj = getPos(pos, i);
+				if (adj.y >= 0 && adj.y < rooms.size() && adj.x >= 0 && adj.x < rooms[0].size()) continue;
+				if (rooms[adj.y][adj.x] && !next->adj[i] && rand() % 3 == 1) {
+					next->setRoom(rooms[adj.y][adj.x], i);
+					rooms[adj.y][adj.x]->setRoom(next, (i + 2) % 4);
+				}
+			}
+
 			if (node.level < MAX_ROOM_LEVEL) {
 				gen.push({ next, pos, node.level + 1 });
 			}
@@ -344,10 +356,10 @@ void Game::transportToRoom(Room *room) {
 
 Player *Game::nearestPlayer(GameObject *object) {
 	Player *ret = players[0];
-	float minDist = ret->dist(*object);
+	float minDist = ret->dist(object);
 
 	for (int i = 1; i < players.size(); i++) {
-		float dist = players[i]->dist(*object);
+		float dist = players[i]->dist(object);
 		if (dist < minDist) {
 			ret = players[i];
 			minDist = dist;

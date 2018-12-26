@@ -19,11 +19,11 @@ public:
 
 	Enemy(vec2 pos);
 	virtual ~Enemy();
-	void update();
-	void render();
-	void renderMinimap();
-	void pathfind();
+	virtual void update();
+	virtual void render();
+	virtual void renderMinimap();
 	virtual void damage(int amt);
+	void pathfind();
 	bool dead();
 };
 
@@ -45,6 +45,16 @@ public:
 	ESlime(vec2 pos);
 	ESlime(vec2 pos, int level);
 	~ESlime();
+};
+
+class EShell : public Enemy {
+public:
+	EShell(vec2 pos);
+};
+
+class EChomp : public Enemy {
+public:
+	EChomp(vec2 pos);
 };
 
 class Boss : public Enemy {

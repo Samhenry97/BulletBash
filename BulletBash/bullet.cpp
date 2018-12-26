@@ -1,6 +1,7 @@
 #include "bullet.h"
 #include "game.h"
 #include "util.h"
+#include "physics.h"
 
 Bullet::Bullet(int type, vec2 pos, float speed, float angle) {
 	sprite.setPosition(pos);
@@ -23,8 +24,8 @@ void Bullet::update() {
 		}
 
 		if (nearest) {
-			float turn = turnAngle(GameObject::angle(*nearest), moveAngle);
-			if (GameObject::dist(*nearest) <= homingDeadzone) {
+			float turn = turnAngle(GameObject::angle(nearest), moveAngle);
+			if (GameObject::dist(nearest) <= homingDeadzone) {
 				moveAngle += homingSpeed * frameTime * (turn > PI ? 1 : -1);
 			}
 		}
@@ -33,14 +34,9 @@ void Bullet::update() {
 	float x = speed * frameTime * cos(moveAngle);
 	float y = speed * frameTime * sin(moveAngle);
 	vec2 move = vec2(x, y);
-	std::vector<vec2> transform = {
-		sprite.getTransform().transformPoint(vec2(0, 0)) + move,
-		sprite.getTransform().transformPoint(vec2(sprite.getSize().x, 0)) + move,
-		sprite.getTransform().transformPoint(vec2(0, sprite.getSize().y)) + move,
-		sprite.getTransform().transformPoint(vec2(sprite.getSize().x, sprite.getSize().y)) + move
-	};
+	auto transform = transformPoints();
 	for (int i = 0; i < transform.size(); i++) {
-		if (game->blockCollision(transform[i])) kill();
+		if (game->blockCollision(transform[i] + move)) kill();
 	}
 	
 	dist += hypot(y, x);
@@ -163,4 +159,33 @@ BHoming::BHoming(int type, vec2 pos, float speed, float angle) : Bullet(type, po
 	homing = true;
 	homingSpeed = 2.0f;
 	homingDeadzone = 400.0f;
+}
+
+BLine::BLine(int type, vec2 pos, float angle) : Bullet(type, pos, 0.0, angle) {
+	damage = 10;
+	splash = true;
+	sprite.setFillColor(sf::Color::Green);
+	RayCastResult res = game->room->raycast(sprite.getPosition(), moveAngle, game->room->raycastLength());
+	endPos = res.pos;
+	killTime = 0.5f;
+}
+
+void BLine::update() {
+	animTime += frameTime;
+	if (animTime >= killTime) kill();
+}
+
+void BLine::render() {
+	float len = hypot(endPos.y - sprite.getPosition().y, endPos.x - sprite.getPosition().x);
+	sprite.setSize(vec2(len, 5));
+	sprite.setRotation(moveAngle * RADIANS_TO_DEGREES);
+	window->draw(sprite);
+}
+
+bool BLine::intersects(GameObject *other) {
+	auto transform = other->transformPoints();
+	for (int i = 0; i < 4; i++) {
+		if (Physics::lineIntersects(sprite.getPosition(), endPos, transform[i], transform[(i + 1) % 4])) return true;
+	}
+	return false;
 }

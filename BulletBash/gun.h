@@ -18,12 +18,13 @@ public:
 
 	Gun(GameObject *owner, float fireTime, float reloadTime, int clip, int ammo);
 
-	void tryFire();
 	virtual void fire();
+	virtual void update();
+	virtual void render();
+
+	void tryFire();
 	void reload();
 	void setOwner(GameObject *owner);
-	void update();
-	void render();
 	void drop();
 	float getAngle();
 	bool interact(GameObject *player);
@@ -59,6 +60,18 @@ public:
 	void fire();
 };
 
+class GDoubleGun : public Gun {
+public:
+	GDoubleGun(GameObject *owner);
+	void fire();
+};
+
+class GSplashGun : public Gun {
+public:
+	GSplashGun(GameObject *owner);
+	void fire();
+};
+
 class GSteveGun : public Gun {
 public:
 	GSteveGun(GameObject *owner);
@@ -74,5 +87,11 @@ public:
 class GHoming : public Gun {
 public:
 	GHoming(GameObject *owner);
+	void fire();
+};
+
+class GRay : public Gun {
+public:
+	GRay(GameObject *owner);
 	void fire();
 };

@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <queue>
+#include <iostream>
 #include <algorithm>
 #include <functional>
 
@@ -60,3 +61,8 @@ typedef sf::Vector2f vec2;
 typedef sf::Vector2u vec2u;
 typedef sf::Vector2i vec2i;
 typedef std::pair<int, int> pi;
+
+struct RayCastResult {
+	vec2 pos;
+	bool collision;
+};

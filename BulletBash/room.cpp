@@ -86,7 +86,7 @@ void Room::update() {
 		cur->update();
 		if (cur->interactable()) {
 			for (int i = 0; i < totalPlayers; i++) {
-				if (!playerHighlight[i] && game->players[i]->intersects(*cur)) {
+				if (!playerHighlight[i] && game->players[i]->intersects(cur)) {
 					playerHighlight[i] = true;
 					cur->highlight();
 				}
@@ -215,6 +215,64 @@ int Room::collision(GameObject *origin, vec2 point) {
 	return COLLISION_NONE;
 }
 
+RayCastResult Room::raycast(vec2 pos, float angle, float len) {
+	RayCastResult res = { vec2(0, 0), false };
+
+	res.pos.x = pos.x + len * cos(angle);
+	res.pos.y = pos.y + len * sin(angle);
+	std::vector<vec2> line;
+	genline(line, pos, res.pos);
+
+	if (line.size()) {
+		bool begin = hypot(pos.x - line[0].x, pos.y - line[0].y) <= 3.0f;
+		int idx = begin ? 0 : line.size() - 1;
+		while (idx >= 0 && idx < line.size()) {
+			if (blockCollision(line[idx])) {
+				res.pos = line[idx];
+				res.collision = true;
+				break;
+			}
+			if (begin) idx++;
+			else idx--;
+		}
+	}
+
+	return res;
+}
+
+void Room::genline(std::vector<vec2> &line, vec2 pos, vec2 endPos) {
+	int x0 = (int)pos.x, y0 = (int)pos.y, x1 = (int)endPos.x, y1 = (int)endPos.y;
+	bool steep = abs(y1 - y0) > abs(x1 - x0);
+	if (steep) {
+		std::swap(x0, y0);
+		std::swap(x1, y1);
+	}
+	if (x0 > x1) {
+		std::swap(x0, x1);
+		std::swap(y0, y1);
+	}
+
+	int dx = x1 - x0;
+	int dy = abs(y1 - y0);
+	int error = 0;
+	int y = y0;
+	int ystep = (y0 < y1) ? 1 : -1;
+
+	for (int x = x0; x <= x1; x++) {
+		if (steep) line.push_back({ (float) y, (float) x });
+		else line.push_back({ (float) x, (float) y });
+		error += dy;
+		if (2 * error >= dx) {
+			y += ystep;
+			error -= dx;
+		}
+	}
+}
+
+float Room::raycastLength() {
+	return hypot(width * BLOCK_SIZE, height * BLOCK_SIZE);
+}
+
 bool Room::complete() {
 	return finished;
 }
@@ -271,7 +329,7 @@ void Room::pathfind(std::vector<vec2i> &path, GameObject *src, GameObject *dest)
 void Room::interact(Player *player) {
 	for (int i = 0; i < items.size(); i++) {
 		Pickup *cur = items[i];
-		if (cur->interactable() && player->intersects(*cur)) {
+		if (cur->interactable() && player->intersects(cur)) {
 			if (cur->interact(player)) {
 				items.erase(items.begin() + i);
 				i--;
@@ -305,10 +363,10 @@ ParticleSystem *Room::addParticleSystem(ParticleSystem *system) {
 GameObject *Room::nearestEnemy(GameObject *object) {
 	if (!enemies.size()) return nullptr;
 	GameObject *ret = enemies[0];
-	float minDist = ret->dist(*object);
+	float minDist = ret->dist(object);
 
 	for (int i = 1; i < enemies.size(); i++) {
-		float dist = enemies[i]->dist(*object);
+		float dist = enemies[i]->dist(object);
 		if (dist < minDist) {
 			ret = enemies[i];
 			minDist = dist;

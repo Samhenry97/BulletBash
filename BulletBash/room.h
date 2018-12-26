@@ -8,6 +8,23 @@
 #include "particle.h"
 #include "mapmanager.h"
 
+struct Node {
+	int y, x;
+	float cost;
+
+	bool operator<(const Node &other) const {
+		return cost < other.cost;
+	}
+
+	bool operator>(const Node &other) const {
+		return cost > other.cost;
+	}
+
+	bool operator==(const Node &other) const {
+		return y == other.y && x == other.x;
+	}
+};
+
 class Room : GameObject {
 protected:
 	std::vector<std::vector<Wall*>> blocks;
@@ -39,6 +56,9 @@ public:
 	ParticleSystem *addParticleSystem(ParticleSystem *system);
 	int blockCollision(vec2 point);
 	int collision(GameObject *origin, vec2 point);
+	float raycastLength();
+	RayCastResult raycast(vec2 pos, float angle, float len);
+	void genline(std::vector<vec2> &line, vec2 pos, vec2 endPos);
 	bool complete();
 	void setRoom(Room *nextRoom, int dir);
 	vec2 spawnLocation(int dir);
@@ -73,21 +93,4 @@ public:
 	void start();
 	void finish();
 	void renderMinimap();
-};
-
-struct Node {
-	int y, x;
-	float cost;
-
-	bool operator<(const Node &other) const {
-		return cost < other.cost;
-	}
-
-	bool operator>(const Node &other) const {
-		return cost > other.cost;
-	}
-
-	bool operator==(const Node &other) const {
-		return y == other.y && x == other.x;
-	}
 };

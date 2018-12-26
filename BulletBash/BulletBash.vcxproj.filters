@@ -102,6 +102,9 @@
     <ClInclude Include="logger.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="physics.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="block.cpp">
@@ -165,6 +168,9 @@
       <Filter>Source Files\ui</Filter>
     </ClCompile>
     <ClCompile Include="mapmanager.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="physics.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
   </ItemGroup>

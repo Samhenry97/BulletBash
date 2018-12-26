@@ -1,73 +1,4 @@
-﻿  animation.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\animation.cpp(52): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              T=int
-          ]
-  block.cpp
-  bullet.cpp
-  enemy.cpp
-  game.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(17): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(89): warning C4244: 'argument': conversion from 'T' to 'const unsigned __int64', possible loss of data
-          with
-          [
-              T=float
-          ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(124): warning C4244: 'argument': conversion from 'T' to 'const unsigned __int64', possible loss of data
-          with
-          [
-              T=float
-          ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(248): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(367): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(368): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(386): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(387): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\game.cpp(415): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  gun.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\gun.cpp(185): warning C4305: '=': truncation from 'double' to 'float'
-  main.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\main.cpp(89): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  menu.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(91): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(132): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(214): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(215): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(287): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(318): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\menu.cpp(356): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  menubutton.cpp
-  particle.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\particle.cpp(52): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\particle.cpp(53): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\particle.cpp(54): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  pickup.cpp
-  player.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\player.cpp(106): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\player.cpp(249): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\player.cpp(296): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-  room.cpp
+﻿  room.cpp
 c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(16): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(24): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
@@ -130,64 +61,64 @@ c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(19
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(224): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(228): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(273): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(282): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(225): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(283): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(229): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(229): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(232): warning C4305: 'argument': truncation from 'int' to 'const _Ty'
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(287): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(287): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(290): warning C4305: 'argument': truncation from 'int' to 'const _Ty'
           with
           [
               _Ty=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(245): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(245): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(325): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(303): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(303): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(383): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(329): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(387): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(330): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(388): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(333): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(391): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(334): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(392): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(338): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(396): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(372): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(373): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(383): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(384): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  util.cpp
-c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\util.cpp(21): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(430): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(431): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(441): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sam\googledrive\documents\programming\bulletbash\bulletbash\room.cpp(442): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   Generating code
-  105 of 3984 functions ( 2.6%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    14 functions had inline decision re-evaluated but remain unchanged
+  3 of 4022 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    7 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   BulletBash.vcxproj -> C:\Users\Sam\GoogleDrive\Documents\Programming\BulletBash\x64\Release\BulletBash.exe

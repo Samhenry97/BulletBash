@@ -35,6 +35,8 @@ Enemy::~Enemy() {
 }
 
 void Enemy::update() {
+	GameObject::update();
+
 	pathClock += frameTime;
 	if (pathClock >= pathTime) {	
 		pathfind();
@@ -52,7 +54,7 @@ void Enemy::update() {
 		float x = 0, y = 0, dx = 0, dy = 0;
 		Player *nearest = game->nearestPlayer(this);
 
-		float angle = this->angle(*nearest);
+		float angle = this->angle(nearest);
 		float curx = sprite.getPosition().x;
 		float cury = sprite.getPosition().y;
 		float width = sprite.getSize().x;
@@ -114,6 +116,7 @@ void Enemy::update() {
 				// the player WILL be when the bullet collides
 				float bottom = 0.0f, top = 100.0f;
 				float mid = (bottom + top) / 2;
+				std::cout << nearest->sprite.getPosition().x << " " << nearest->sprite.getPosition().y << " " << nearest->moveAngle << " " << nearest->speed << " " << curx << " " << cury << " " << gun->speed << std::endl;
 				for (int i = 0; i < 25; i++) {
 					float playerX = nearest->sprite.getPosition().x;
 					float playerY = nearest->sprite.getPosition().y;
@@ -149,10 +152,10 @@ void Enemy::update() {
 
 		for (int i = 0; i < game->room->bullets.size(); i++) {
 			Bullet *cur = game->room->bullets[i];
-			if (cur->type == BULLET_PLAYER && cur->intersects(*this)) {
+			if (cur->type == BULLET_PLAYER && cur->intersects(this)) {
 				if (!cur->splash) { 
 					knocking = true;
-					knockAngle = cur->angle(*this); 
+					knockAngle = cur->angle(this); 
 					cur->kill();
 				}
 				damage(cur->damage);
@@ -220,6 +223,24 @@ EAlien::EAlien(vec2 pos) : Enemy(pos) {
 	gun = new GShotgun(this);
 	gun->fireTime = 1.5f;
 	smart = true;
+}
+
+EChomp::EChomp(vec2 pos) : Enemy(pos) {
+	animation = new Animation(&sprite, vec2(128, 128), 17, 1.0f);
+	sprite.setTexture(Images::get("chomp.png"));
+	sprite.setSize(vec2(ENT_SIZE * 2, ENT_SIZE * 2.5f));
+	baseSpeed = speed = 40.0f;
+	health = maxHealth = 500;
+	gun = new GSplashGun(this);
+	smart = true;
+}
+
+EShell::EShell(vec2 pos) : Enemy(pos) {
+	sprite.setTexture(Images::get("shell.png"));
+	sprite.setSize(vec2(ENT_SIZE, (float)ENT_SIZE * 0.75f));
+	baseSpeed = speed = 60.0f;
+	health = maxHealth = 300;
+	gun = new GDoubleGun(this);
 }
 
 ESlime::ESlime(vec2 pos) : ESlime(pos, 1) { }
@@ -316,7 +337,7 @@ void ERamBoss::update() {
 		chargeDist += hypot(y, x);
 		sprite.move(x, y);
 
-		if (player->intersects(*this)) {
+		if (player->intersects(this)) {
 			chargeDist = chargeMax;
 		}
 
@@ -329,7 +350,7 @@ void ERamBoss::update() {
 		restClock += frameTime;
 		if (restClock >= restTime) {
 			charging = true;
-			chargeAngle = angle(*player);
+			chargeAngle = angle(player);
 			Sounds::play("mommy.wav");
 		}
 	}

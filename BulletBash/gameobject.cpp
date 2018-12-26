@@ -13,23 +13,23 @@ GameObject::~GameObject() {
 	delete animation;
 }
 
-bool GameObject::intersects(GameObject &other) {
-	return sprite.getGlobalBounds().intersects(other.sprite.getGlobalBounds());
+bool GameObject::intersects(GameObject *other) {
+	return sprite.getGlobalBounds().intersects(other->sprite.getGlobalBounds());
 }
 
 bool GameObject::contains(vec2 point) {
 	return sprite.getGlobalBounds().contains(point);
 }
 
-float GameObject::dist(GameObject &other) {
-	float x = std::abs(other.sprite.getPosition().x - sprite.getPosition().x);
-	float y = std::abs(other.sprite.getPosition().y - sprite.getPosition().y);
+float GameObject::dist(GameObject *other) {
+	float x = other->sprite.getPosition().x - sprite.getPosition().x;
+	float y = other->sprite.getPosition().y - sprite.getPosition().y;
 	return std::hypot(x, y);
 }
 
-float GameObject::angle(GameObject &other) {
-	float x = other.sprite.getPosition().x - sprite.getPosition().x;
-	float y = other.sprite.getPosition().y - sprite.getPosition().y;
+float GameObject::angle(GameObject *other) {
+	float x = other->sprite.getPosition().x - sprite.getPosition().x;
+	float y = other->sprite.getPosition().y - sprite.getPosition().y;
 	return atan2(y, x);
 }
 
@@ -77,4 +77,14 @@ void GameObject::flipUp() {
 void GameObject::flipDown() {
 	sf::Vector2u size = sprite.getTexture()->getSize();
 	sprite.setTextureRect(sf::IntRect(0, 0, size.x, size.y));
+}
+
+std::vector<vec2> GameObject::transformPoints() {
+	sf::Transform transform = sprite.getTransform();
+	return {
+		transform.transformPoint(vec2(0, 0)),
+		transform.transformPoint(vec2(sprite.getSize().x, 0)),
+		transform.transformPoint(vec2(sprite.getSize().x, sprite.getSize().y)),
+		transform.transformPoint(vec2(0, sprite.getSize().y)),
+	};
 }

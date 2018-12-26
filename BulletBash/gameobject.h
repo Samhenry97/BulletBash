@@ -18,11 +18,11 @@ public:
 	virtual void update();
 	virtual void renderStatic();
 	virtual void renderMinimap();
+	virtual bool intersects(GameObject *other);
+	virtual bool contains(vec2 point);
 
-	bool intersects(GameObject &other);
-	bool contains(vec2 point);
-	float dist(GameObject &other);
-	float angle(GameObject &other);
+	float dist(GameObject *other);
+	float angle(GameObject *other);
 	vec2 center();
 	void origin();
 	void flipLeft();
@@ -30,4 +30,5 @@ public:
 	void flipUp();
 	void flipDown();
 	virtual int type();
+	std::vector<vec2> transformPoints();
 };

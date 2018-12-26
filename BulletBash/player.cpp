@@ -26,6 +26,7 @@ Player::Player(vec2 pos, vec2 size, std::string image) : GameObject(pos, size) {
 	animFrame = 1;
 	dir = 1;
 	guns.push_back(new GPistol(this));
+	guns.push_back(new GRay(this));
 	guns.push_back(new GShotgun(this));
 	guns.push_back(new GHoming(this));
 	guns.push_back(new GFlameThrower(this));
@@ -171,7 +172,7 @@ void Player::update() {
 
 	for (int i = 0; i < game->room->bullets.size(); i++) {
 		Bullet *cur = game->room->bullets[i];
-		if (cur->type == BULLET_ENEMY && cur->intersects(*this)) {
+		if (cur->type == BULLET_ENEMY && cur->intersects(this)) {
 			if (!cur->splash) { cur->kill(); }
 			damage(cur->damage);
 		}

@@ -123,6 +123,37 @@ void GMinigun::fire() {
 	game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, getAngle()));
 }
 
+GDoubleGun::GDoubleGun(GameObject *owner) : Gun(owner, 1.5f, 0.0f, -1, -1) {
+	sprite.setTexture(Images::get("shotgun.png"));
+	sprite.setFillColor(sf::Color(0, 0, 0, 0));
+	sprite.setSize(vec2(40, 40));
+	origin();
+	speed = 400.0f;
+	name = "Double Gun";
+}
+
+void GDoubleGun::fire() {
+	Sounds::play("bullet.wav");
+	game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, angle - 0.64f));
+	game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, angle + 0.64f));
+}
+
+GSplashGun::GSplashGun(GameObject *owner) : Gun(owner, 0.08f, 3.0f, 50, -1) {
+	sprite.setTexture(Images::get("shotgun.png"));
+	sprite.setFillColor(sf::Color(0, 0, 0, 0));
+	sprite.setSize(vec2(40, 40));
+	origin();
+	speed = 600.0f;
+	spread = 1.28f;
+	name = "Splash Gun";
+}
+
+void GSplashGun::fire() {
+	for (int i = 0; i < 4; i++) {
+		game->room->addBullet(new BBasic(owner->type(), owner->center(), speed, getAngle()));
+	}
+}
+
 GShotgun::GShotgun(GameObject *owner) : Gun(owner, 0.6f, 1.4f, 6, 200) {
 	sprite.setTexture(Images::get("shotgun.png"));
 	sprite.setSize(vec2(80, 25));
@@ -203,4 +234,16 @@ GHoming::GHoming(GameObject *owner) : Gun(owner, 0.15f, 0.8f, 16, 150) {
 void GHoming::fire() {
 	Sounds::play("bullet.wav");
 	game->room->addBullet(new BHoming(owner->type(), owner->center(), speed, getAngle()));
+}
+
+GRay::GRay(GameObject *owner) : Gun(owner, 0.2f, 0.8f, 20, 400) {
+	sprite.setTexture(Images::get("raygun.png"));
+	sprite.setSize(vec2(60, 40));
+	origin();
+	name = "Ray Gun";
+}
+
+void GRay::fire() {
+	Sounds::play("bullet.wav");
+	game->room->addBullet(new BLine(owner->type(), owner->center(), getAngle()));
 }
