@@ -1,1 +1,10 @@
 .vs/
+*.obj
+*.log
+*.tlog
+*.lastbuildstate
+*.ilk
+*.pdb
+*.ipdb
+*.iobj
+*.exe
