@@ -5,6 +5,8 @@ Wall::Wall(vec2 pos) {
 	sprite.setTexture(Images::get("block.png"));
 	sprite.setPosition(pos);
 	sprite.setSize(vec2(BLOCK_SIZE, BLOCK_SIZE));
+	hitbox.setPosition(pos);
+	hitbox.setSize(vec2(BLOCK_SIZE, BLOCK_SIZE));
 }
 
 void Wall::update() {

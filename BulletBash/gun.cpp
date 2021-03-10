@@ -84,8 +84,8 @@ void Gun::render() {
 		sprite.setTextureRect(sf::IntRect(0, 0, size.x, size.y));
 	}
 
-	if(owner) sprite.setPosition(owner->center());
-	sprite.setRotation(angle * RADIANS_TO_DEGREES);
+	if (owner) { setPosition(owner->center()); }
+	setRotation(angle * RADIANS_TO_DEGREES);
 	Pickup::render();
 }
 
@@ -98,7 +98,7 @@ bool Gun::interact(GameObject *player) {
 
 GPistol::GPistol(GameObject *owner) : Gun(owner, 0.2f, 1.0f, 12, -1) {
 	sprite.setTexture(Images::get("pistol.png"));
-	sprite.setSize(vec2(40, 30));
+	setSize(vec2(40, 30));
 	speed = 600.0f;
 	spread = 0.32f;
 	origin();
@@ -112,7 +112,7 @@ void GPistol::fire() {
 
 GMinigun::GMinigun(GameObject *owner) : Gun(owner, 0.08f, 0, -1, 10000) {
 	sprite.setTexture(Images::get("minigun.png"));
-	sprite.setSize(vec2(100, 30));
+	setSize(vec2(100, 30));
 	speed = 1000.0f;
 	origin();
 	name = "Minigun";
@@ -126,7 +126,7 @@ void GMinigun::fire() {
 GDoubleGun::GDoubleGun(GameObject *owner) : Gun(owner, 1.5f, 0.0f, -1, -1) {
 	sprite.setTexture(Images::get("shotgun.png"));
 	sprite.setFillColor(sf::Color(0, 0, 0, 0));
-	sprite.setSize(vec2(40, 40));
+	setSize(vec2(40, 40));
 	origin();
 	speed = 400.0f;
 	name = "Double Gun";
@@ -141,7 +141,7 @@ void GDoubleGun::fire() {
 GSplashGun::GSplashGun(GameObject *owner) : Gun(owner, 0.08f, 3.0f, 50, -1) {
 	sprite.setTexture(Images::get("shotgun.png"));
 	sprite.setFillColor(sf::Color(0, 0, 0, 0));
-	sprite.setSize(vec2(40, 40));
+	setSize(vec2(40, 40));
 	origin();
 	speed = 600.0f;
 	spread = 1.28f;
@@ -156,7 +156,7 @@ void GSplashGun::fire() {
 
 GShotgun::GShotgun(GameObject *owner) : Gun(owner, 0.6f, 1.4f, 6, 200) {
 	sprite.setTexture(Images::get("shotgun.png"));
-	sprite.setSize(vec2(80, 25));
+	setSize(vec2(80, 25));
 	speed = 800.0f;
 	spread = 0.64f;
 	origin();
@@ -172,7 +172,7 @@ void GShotgun::fire() {
 
 GBubble::GBubble(GameObject *owner) : Gun(owner, 1.5f, 2.0f, 5, 50) {
 	sprite.setTexture(Images::get("bubblegun.png"));
-	sprite.setSize(vec2(50, 30));
+	setSize(vec2(50, 30));
 	speed = 400.0f;
 	origin();
 	name = "Bubble Gun";
@@ -185,7 +185,7 @@ void GBubble::fire() {
 
 GGunGun::GGunGun(GameObject *owner) : Gun(owner, 0.6f, 1.2f, 6, 120) {
 	sprite.setTexture(Images::get("gungun.png"));
-	sprite.setSize(vec2(75, 25));
+	setSize(vec2(75, 25));
 	speed = 800.0f;
 	origin();
 	name = "Gun Gun";
@@ -198,7 +198,7 @@ void GGunGun::fire() {
 
 GSteveGun::GSteveGun(GameObject *owner) : Gun(owner, 2.0f, 3.0f, 6, 120) {
 	sprite.setTexture(Images::get("stevegun.png"));
-	sprite.setSize(vec2(100, 50));
+	setSize(vec2(100, 50));
 	speed = 800.0f;
 	origin();
 	name = "Steve Gun";
@@ -211,7 +211,7 @@ void GSteveGun::fire() {
 
 GFlameThrower::GFlameThrower(GameObject *owner) : Gun(owner, 0.02f, 0, -1, 2000) {
 	sprite.setTexture(Images::get("flamethrower.png"));
-	sprite.setSize(vec2(80, 40));
+	setSize(vec2(80, 40));
 	speed = 800.0f;
 	spread = 0.32;
 	origin();
@@ -225,7 +225,7 @@ void GFlameThrower::fire() {
 
 GHoming::GHoming(GameObject *owner) : Gun(owner, 0.15f, 0.8f, 16, 150) {
 	sprite.setTexture(Images::get("hominggun.png"));
-	sprite.setSize(vec2(60, 50));
+	setSize(vec2(60, 50));
 	speed = 600.0f;
 	origin();
 	name = "Homing Gun";
@@ -238,7 +238,7 @@ void GHoming::fire() {
 
 GRay::GRay(GameObject *owner) : Gun(owner, 0.2f, 0.8f, 20, 400) {
 	sprite.setTexture(Images::get("raygun.png"));
-	sprite.setSize(vec2(60, 40));
+	setSize(vec2(60, 40));
 	origin();
 	name = "Ray Gun";
 }

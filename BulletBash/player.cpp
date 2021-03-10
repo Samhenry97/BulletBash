@@ -8,8 +8,8 @@
 
 Player::Player(vec2 pos, vec2 size, std::string image) : GameObject(pos, size) {
 	sprite.setTexture(Images::get(image + "1.png"));
-	sprite.setPosition(pos);
-	sprite.setSize(size);
+	setPosition(pos);
+	setSize(size);
 	gui.setTexture(Images::get(image + "face.png"));
 	gui.setSize(vec2(ENT_SIZE, ENT_SIZE));
 	reloadOutline.setSize(vec2(BLOCK_SIZE + 4, 16));
@@ -17,9 +17,9 @@ Player::Player(vec2 pos, vec2 size, std::string image) : GameObject(pos, size) {
 	reloadProgress.setSize(vec2(BLOCK_SIZE, 12));
 	reloadProgress.setFillColor(sf::Color(0, 0, 100));
 	controller = 0;
-	baseSpeed = speed = 300.0f;
+	baseSpeed = speed = 400.0f;
 	health = maxHealth = 500;
-	dashTime = 0.4f;
+	dashTime = 0.2f;
 	damageTime = 0.5f;
 	animTime = 0.2f;
 	dropTime = 1.0f;
@@ -53,7 +53,7 @@ void Player::buttonPressed(int button) {
 		if (dashClock >= dashTime) {
 			dashing = true;
 			dashClock = 0;
-			speed = 500.0f;
+			speed = 1000.0f;
 			sprite.setTexture(Images::get(image + "roll.png"));
 		}
 		break;
@@ -73,6 +73,8 @@ void Player::axisMoved(int axis, int pos) {
 
 void Player::update() {
 	float x, y;
+
+	// Dashing Logic
 	if (!dashing) {
 		float cx = Xbox::getAxis(controller, XBOX_LX);
 		float cy = Xbox::getAxis(controller, XBOX_LY);
@@ -85,6 +87,7 @@ void Player::update() {
 		y = speed * frameTime * sin(dashAngle);
 	}
 
+	// Collision Detection
 	sf::FloatRect port = game->getViewBounds();
 	float curx = sprite.getPosition().x;
 	float cury = sprite.getPosition().y;
@@ -95,12 +98,14 @@ void Player::update() {
 	if (y < 0 && cury - y < port.top) y = 0;
 	if (y > 0 && cury + y + height > port.top + port.height) y = 0;
 
+	int res = 0;
 	if (x < 0 && (game->collision(this, vec2(curx + x, cury)) || game->collision(this, vec2(curx + x, cury + height)))) x = 0;
 	if (x > 0 && (game->collision(this, vec2(curx + width + x, cury)) || game->collision(this, vec2(curx + width + x, cury + height)))) x = 0;
 	if (y < 0 && (game->collision(this, vec2(curx, cury + y)) || game->collision(this, vec2(curx + width, cury + y)))) y = 0;
 	if (y > 0 && (game->collision(this, vec2(curx, cury + height + y)) || game->collision(this, vec2(curx + width, cury + height + y)))) y = 0;
-	sprite.move(vec2(x, y));
+	move(vec2(x, y));
 
+	// Sprite Direction
 	float dx = Xbox::getAxis(controller, XBOX_RX, false);
 	float dy = Xbox::getAxis(controller, XBOX_RY, false);
 	float angle = atan2(dy, dx);
@@ -120,11 +125,13 @@ void Player::update() {
 		dir = 1;
 	}
 
+	// Gun Updates
 	if (gun) {
 		gun->update();
 		gun->angle = angle;
 	}
 
+	// Timer Updates
 	if (!dashing) {
 		if (gun && Xbox::buttonDown(controller, XBOX_RB)) {
 			gun->tryFire();

@@ -4,8 +4,8 @@
 #include "physics.h"
 
 Bullet::Bullet(int type, vec2 pos, float speed, float angle) {
-	sprite.setPosition(pos);
-	sprite.setRotation(angle * RADIANS_TO_DEGREES);
+	setPosition(pos);
+	setRotation(angle * RADIANS_TO_DEGREES);
 	this->speed = speed;
 	this->moveAngle = angle;
 	this->type = type;
@@ -33,18 +33,18 @@ void Bullet::update() {
 
 	float x = speed * frameTime * cos(moveAngle);
 	float y = speed * frameTime * sin(moveAngle);
-	vec2 move = vec2(x, y);
+	vec2 offset = vec2(x, y);
 	auto transform = transformPoints();
 	for (int i = 0; i < transform.size(); i++) {
-		if (game->blockCollision(transform[i] + move)) kill();
+		if (game->blockCollision(transform[i] + offset)) kill();
 	}
 	
 	dist += hypot(y, x);
-	sprite.move(move);
+	move(offset);
 }
 
 void Bullet::render() {
-	sprite.setRotation(moveAngle * RADIANS_TO_DEGREES);
+	setRotation(moveAngle * RADIANS_TO_DEGREES);
 	window->draw(sprite);
 }
 
@@ -58,7 +58,7 @@ bool Bullet::dead() {
 
 BBasic::BBasic(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("bullet.png"));
-	sprite.setSize(vec2(30, 30));
+	setSize(vec2(30, 30));
 	damage = 20;
 	bouncy = true;
 	origin();
@@ -66,14 +66,14 @@ BBasic::BBasic(int type, vec2 pos, float speed, float angle) : Bullet(type, pos,
 
 BHeavy::BHeavy(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("beam.png"));
-	sprite.setSize(vec2(50, 15));
+	setSize(vec2(50, 15));
 	origin();
 	damage = 60;
 }
 
 BBubble::BBubble(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("explode.png"));
-	sprite.setSize(vec2(60, 60));
+	setSize(vec2(60, 60));
 	origin();
 	splash = true;
 	damage = 0;
@@ -96,8 +96,8 @@ void BBubble::kill() {
 
 BGun::BGun(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("pistol.png"));
-	sprite.setSize(vec2(40, 30));
 	sprite.setFillColor(sf::Color::White);
+	setSize(vec2(40, 30));
 	displayAngle = angle;
 	damage = 100;
 	shootTime = 0.1f;
@@ -120,8 +120,8 @@ void BGun::render() {
 
 BSteve::BSteve(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("steve.png"));
-	sprite.setSize(vec2(60, 30));
 	sprite.setFillColor(sf::Color::White);
+	setSize(vec2(60, 30));
 	displayAngle = angle;
 	shootTime = 0.15f;
 	damage = 400;
@@ -144,8 +144,8 @@ void BSteve::render() {
 
 BFlame::BFlame(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("flame.png"));
-	sprite.setSize(vec2(120, 40));
 	sprite.setFillColor(sf::Color::White);
+	setSize(vec2(120, 40));
 	origin();
 	damage = 2;
 	splash = true;
@@ -153,7 +153,7 @@ BFlame::BFlame(int type, vec2 pos, float speed, float angle) : Bullet(type, pos,
 
 BHoming::BHoming(int type, vec2 pos, float speed, float angle) : Bullet(type, pos, speed, angle) {
 	sprite.setTexture(Images::get("homing.png"));
-	sprite.setSize(vec2(40, 14));
+	setSize(vec2(40, 14));
 	origin();
 	damage = 80;
 	homing = true;
@@ -165,7 +165,7 @@ BLine::BLine(int type, vec2 pos, float angle) : Bullet(type, pos, 0.0, angle) {
 	damage = 10;
 	splash = true;
 	sprite.setFillColor(sf::Color::Green);
-	RayCastResult res = game->room->raycast(sprite.getPosition(), moveAngle, game->room->raycastLength());
+	RayCastResult res = game->room->raycast(hitbox.getPosition(), moveAngle, game->room->raycastLength());
 	endPos = res.pos;
 	killTime = 0.5f;
 }
@@ -185,7 +185,7 @@ void BLine::render() {
 bool BLine::intersects(GameObject *other) {
 	auto transform = other->transformPoints();
 	for (int i = 0; i < 4; i++) {
-		if (Physics::lineIntersects(sprite.getPosition(), endPos, transform[i], transform[(i + 1) % 4])) return true;
+		if (Physics::lineIntersects(hitbox.getPosition(), endPos, transform[i], transform[(i + 1) % 4])) return true;
 	}
 	return false;
 }

@@ -109,7 +109,7 @@ void Game::nextFloor() {
 	}
 
 	for (int i = 0; i < totalPlayers; i++) {
-		players[i]->sprite.setPosition(room->center());
+		players[i]->setPosition(room->center());
 	}
 	room->start();
 	Sounds::back();
@@ -138,6 +138,40 @@ std::vector<int> Game::availableDirs(vec2 pos) {
 		}
 	}
 	return ret;
+}
+
+void Game::calculateViewPositions() {
+	vec2 size = players[0]->sprite.getSize();
+	std::vector<float> xpos;
+	std::vector<float> ypos;
+	for (Player *player : players) {
+		xpos.push_back(player->sprite.getPosition().x);
+		ypos.push_back(player->sprite.getPosition().y);
+	}
+	std::sort(xpos.begin(), xpos.end());
+	std::sort(ypos.begin(), ypos.end());
+	float pw = xpos[xpos.size() - 1] - xpos[0] + size.x;
+	float ph = ypos[ypos.size() - 1] - ypos[0] + size.y;
+	float vieww = view->getSize().x;
+	float viewh = view->getSize().y;
+	if (pw > vieww - 10 && vieww < WINDOW_MAX_WIDTH) { view->zoom(1.002); }
+	else if (ph > viewh - 10 && viewh < WINDOW_MAX_HEIGHT) { view->zoom(1.002); }
+	else if (pw < vieww - 10 && vieww > WINDOW_MIN_WIDTH) { view->zoom(0.998); }
+	else if (ph < viewh - 10 && viewh > WINDOW_MIN_HEIGHT) { view->zoom(0.998); }
+	vec2 target = vec2((xpos[0] + xpos[xpos.size() - 1] + size.x) / 2, (ypos[0] + ypos[ypos.size() - 1] + size.y) / 2);
+	vec2 current = view->getCenter();
+	float dist = hypot(target.x - current.x, target.y - current.y);
+	if (dist < 0.0f) {
+		view->setCenter(target);
+	}
+	else {
+		float angle = atan2(target.y - current.y, target.x - current.x);
+		float move = dist / 32.0f;
+		float dx = current.x + move * cos(angle);
+		float dy = current.y + move * sin(angle);
+		view->setCenter(vec2(dx, dy));
+	}
+	if (minimapZoomed) minimap->setCenter(target);
 }
 
 void Game::switchTo(State newState) {
@@ -227,11 +261,6 @@ void Game::update() {
 }
 
 void Game::render() {
-	std::vector<float> xpos;
-	std::vector<float> ypos;
-	float pw, ph, vieww, viewh;
-	vec2 size, center;
-
 	switch (state) {
 	case START:
 		startMenu->render();
@@ -246,21 +275,7 @@ void Game::render() {
 
 	case MINIMAP:
 	case INGAME:
-		size = players[0]->sprite.getSize();
-		for (Player *player : players) {
-			xpos.push_back(player->sprite.getPosition().x);
-			ypos.push_back(player->sprite.getPosition().y);
-		}
-		std::sort(xpos.begin(), xpos.end());
-		std::sort(ypos.begin(), ypos.end());
-		pw = xpos[xpos.size() - 1] - xpos[0] + size.x;
-		ph = ypos[ypos.size() - 1] - ypos[0] + size.y;
-		vieww = view->getSize().x;
-		viewh = view->getSize().y;
-		if (pw > vieww - 10 && vieww < WINDOW_MAX_WIDTH) { view->zoom(1.002); } else if (ph > viewh - 10 && viewh < WINDOW_MAX_HEIGHT) { view->zoom(1.002); } else if (pw < vieww - 10 && vieww > WINDOW_MIN_WIDTH) { view->zoom(0.998); } else if (ph < viewh - 10 && viewh > WINDOW_MIN_HEIGHT) { view->zoom(0.998); }
-		center = vec2((xpos[0] + xpos[xpos.size() - 1] + size.x) / 2, (ypos[0] + ypos[ypos.size() - 1] + size.y) / 2);
-		view->setCenter(center);
-		if(minimapZoomed) minimap->setCenter(center);
+		calculateViewPositions();
 		room->render();
 		for (Player* player : players) { 
 			player->render();
@@ -342,7 +357,7 @@ void Game::transport(int dir) {
 	int spawnDir = (dir + 2) % 4;
 	vec2 spawn = room->spawnLocation(spawnDir);
 	for (int i = 0; i < totalPlayers; i++) {
-		players[i]->sprite.setPosition(spawn);
+		players[i]->setPosition(spawn);
 	}
 }
 
@@ -350,7 +365,7 @@ void Game::transportToRoom(Room *room) {
 	this->room = room;
 	vec2 spawn = room->spawnLocation(DIR_LEFT);
 	for (int i = 0; i < totalPlayers; i++) {
-		players[i]->sprite.setPosition(spawn);
+		players[i]->setPosition(spawn);
 	}
 }
 

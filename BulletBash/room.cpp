@@ -194,25 +194,32 @@ int Room::blockCollision(vec2 point) {
 	int x = point.x / BLOCK_SIZE;
 	int y = point.y / BLOCK_SIZE;
 
-	if (y >= 0 && x >= 0 && y < height && x < width && blocks[y][x]) {
+	if (y >= 0 && x >= 0 && y < height && x < width && blocks[y][x] && blocks[y][x]->solid) {
 		return COLLISION_BLOCK;
 	}
 	return COLLISION_NONE;
 }
 
 int Room::collision(GameObject *origin, vec2 point) {
-	if (blockCollision(point)) return COLLISION_BLOCK;
+	if (!origin->solid) return COLLISION_NONE;
+	int res = blockCollision(point);
 	for (Enemy *enemy : enemies) {
-		if (origin != enemy && enemy->contains(point)) {
-			return COLLISION_ENEMY;
+		if (origin != enemy && enemy->contains(point) && enemy->solid) {
+			if (Player *p = dynamic_cast<Player*>(origin)) {
+				p->damage(CONTACT_DAMAGE);
+			}
+			res |= COLLISION_ENEMY;
 		}
 	}
 	for (Player *player : game->players) {
-		if (origin != player && player->contains(point)) {
-			return COLLISION_PLAYER;
+		if (origin != player && player->contains(point) && player->solid) {
+			if (Enemy *e = dynamic_cast<Enemy*>(origin)) {
+				player->damage(CONTACT_DAMAGE);
+			}
+			res |= COLLISION_PLAYER;
 		}
 	}
-	return COLLISION_NONE;
+	return res;
 }
 
 RayCastResult Room::raycast(vec2 pos, float angle, float len) {

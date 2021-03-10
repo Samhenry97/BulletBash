@@ -6,8 +6,8 @@
 Pickup::Pickup() : Pickup(vec2(0, 0)) { }
 
 Pickup::Pickup(vec2 pos) {
-	sprite.setPosition(pos);
 	sprite.setOutlineColor(sf::Color::White);
+	setPosition(pos);
 	scale = 1.0f;
 	scaleSpeed = 2.0f;
 	scaleDir = 1;
@@ -53,7 +53,7 @@ bool Pickup::interactable() {
 
 PAmmo::PAmmo(vec2 pos) : Pickup(pos) {
 	sprite.setTexture(Images::get("ammo.png"));
-	sprite.setSize(vec2(ENT_SIZE / 2, ENT_SIZE / 2));
+	setSize(vec2(ENT_SIZE / 2, ENT_SIZE / 2));
 	origin();
 }
 
@@ -69,7 +69,7 @@ bool PAmmo::interact(GameObject *player) {
 
 PHealth::PHealth(vec2 pos) : Pickup(pos) {
 	sprite.setTexture(Images::get("health.png"));
-	sprite.setSize(vec2(ENT_SIZE / 2, ENT_SIZE / 2));
+	setSize(vec2(ENT_SIZE / 2, ENT_SIZE / 2));
 	origin();
 }
 
@@ -85,7 +85,7 @@ bool PHealth::interact(GameObject *player) {
 PChest::PChest(vec2 pos, int tier) : Pickup(pos) {
 	this->tier = tier;
 	sprite.setTexture(Images::get("chest/chest" + STR(tier) + ".png"));
-	sprite.setSize(vec2(BLOCK_SIZE, BLOCK_SIZE));
+	setSize(vec2(BLOCK_SIZE, BLOCK_SIZE));
 	scaleSpeed = 0.0f;
 }
 
@@ -103,7 +103,7 @@ bool PChest::interact(GameObject *player) {
 
 PDoor::PDoor(vec2 pos, int dir) : Pickup(pos), dir(dir) {
 	sprite.setTexture(Images::get("teleporter.png"));
-	sprite.setSize(vec2(BLOCK_SIZE, BLOCK_SIZE));
+	setSize(vec2(BLOCK_SIZE, BLOCK_SIZE));
 	scaleSpeed = 0.0f;
 	interacted = true;
 }
@@ -124,9 +124,9 @@ PNextFloor::PNextFloor(vec2 pos) : Pickup(pos) {
 	animation = new Animation(&sprite, vec2(200, 300), 6, 2.0f);
 	animation->setTimes(1);
 	animation->stop();
-	sprite.setSize(vec2(200, 300));
-	sprite.setOrigin(100, 150);
 	sprite.setTexture(Images::get("nextfloor.png"));
+	setSize(vec2(200, 300));
+	setOrigin(vec2(100, 150));
 	scaleSpeed = 0.0f;
 	interacted = true;
 }

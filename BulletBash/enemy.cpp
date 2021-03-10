@@ -10,7 +10,7 @@ std::vector<Enemy*(*)(vec2 pos)> NORMAL_ENEMIES;
 std::vector<Enemy*(*)(vec2 pos)> BOSS_ENEMIES;
 
 Enemy::Enemy(vec2 pos) {
-	sprite.setPosition(pos);
+	setPosition(pos);
 	gui.setTexture(Images::get("enemygui.png"));
 	gui.setSize(vec2(ENT_SIZE, ENT_SIZE));
 	damageTime = 0.15f;
@@ -18,6 +18,7 @@ Enemy::Enemy(vec2 pos) {
 	pathClock = pathTime = 1.0f;
 	spawning = true;
 	knockSpeed = 300.0f;
+	solid = false;
 }
 
 Enemy::~Enemy() {
@@ -27,7 +28,7 @@ Enemy::~Enemy() {
 		if (rand() % 20 == 1) {
 			game->room->addItem(new PAmmo(sprite.getPosition()));
 		} 
-		if (rand() % 20 == 1) {
+		if (rand() % 3 == 1) {
 			game->room->addItem(new PHealth(sprite.getPosition()));
 		}
 		delete gun;
@@ -49,6 +50,7 @@ void Enemy::update() {
 		if (spawnClock >= spawnTime) {
 			pathfind();
 			spawning = false;
+			solid = true;
 		}
 	} else {
 		float x = 0, y = 0, dx = 0, dy = 0;
@@ -107,7 +109,7 @@ void Enemy::update() {
 		if (y < 0 && topCollision) y = 0;
 		if (y > 0 && bottomCollision) y = 0;
 
-		sprite.move(x, y);
+		move(vec2(x, y));
 
 		if (gun) {
 			if (smart) {
@@ -116,7 +118,6 @@ void Enemy::update() {
 				// the player WILL be when the bullet collides
 				float bottom = 0.0f, top = 100.0f;
 				float mid = (bottom + top) / 2;
-				std::cout << nearest->sprite.getPosition().x << " " << nearest->sprite.getPosition().y << " " << nearest->moveAngle << " " << nearest->speed << " " << curx << " " << cury << " " << gun->speed << std::endl;
 				for (int i = 0; i < 25; i++) {
 					float playerX = nearest->sprite.getPosition().x;
 					float playerY = nearest->sprite.getPosition().y;
@@ -180,7 +181,7 @@ void Enemy::render() {
 }
 
 void Enemy::renderMinimap() {
-	gui.setPosition(sprite.getPosition());
+	setPosition(sprite.getPosition());
 	window->draw(gui);
 }
 
@@ -208,7 +209,7 @@ void Enemy::pathfind() {
 
 EBasic::EBasic(vec2 pos) : Enemy(pos) {
 	sprite.setTexture(Images::get("enemy.png"));
-	sprite.setSize(vec2(ENT_SIZE * 2 / 3, ENT_SIZE));
+	setSize(vec2(ENT_SIZE * 2 / 3, ENT_SIZE));
 	baseSpeed = speed = 100.0f;
 	health = maxHealth = 120;
 	gun = new GPistol(this);
@@ -217,7 +218,7 @@ EBasic::EBasic(vec2 pos) : Enemy(pos) {
 
 EAlien::EAlien(vec2 pos) : Enemy(pos) {
 	sprite.setTexture(Images::get("alien.png"));
-	sprite.setSize(vec2(ENT_SIZE, ENT_SIZE));
+	setSize(vec2(ENT_SIZE, ENT_SIZE));
 	baseSpeed = speed = 75.0f;
 	health = maxHealth = 300;
 	gun = new GShotgun(this);
@@ -228,7 +229,7 @@ EAlien::EAlien(vec2 pos) : Enemy(pos) {
 EChomp::EChomp(vec2 pos) : Enemy(pos) {
 	animation = new Animation(&sprite, vec2(128, 128), 17, 1.0f);
 	sprite.setTexture(Images::get("chomp.png"));
-	sprite.setSize(vec2(ENT_SIZE * 2, ENT_SIZE * 2.5f));
+	setSize(vec2(ENT_SIZE * 2, ENT_SIZE * 2.5f));
 	baseSpeed = speed = 40.0f;
 	health = maxHealth = 500;
 	gun = new GSplashGun(this);
@@ -237,7 +238,7 @@ EChomp::EChomp(vec2 pos) : Enemy(pos) {
 
 EShell::EShell(vec2 pos) : Enemy(pos) {
 	sprite.setTexture(Images::get("shell.png"));
-	sprite.setSize(vec2(ENT_SIZE, (float)ENT_SIZE * 0.75f));
+	setSize(vec2(ENT_SIZE, (float)ENT_SIZE * 0.75f));
 	baseSpeed = speed = 60.0f;
 	health = maxHealth = 300;
 	gun = new GDoubleGun(this);
@@ -248,7 +249,7 @@ ESlime::ESlime(vec2 pos) : ESlime(pos, 1) { }
 ESlime::ESlime(vec2 pos, int level) : Enemy(pos) {
 	this->level = level;
 	sprite.setTexture(Images::get("slime.png"));
-	sprite.setSize(vec2(ENT_SIZE - (level - 1) * 12.0f, ENT_SIZE - (level - 1) * 12.0f));
+	setSize(vec2(ENT_SIZE - (level - 1) * 12.0f, ENT_SIZE - (level - 1) * 12.0f));
 	baseSpeed = speed = 75.0f + 30.0f * level;
 	health = maxHealth = 300 / level;
 	hitDamage = 3 - level;
@@ -260,8 +261,10 @@ ESlime::~ESlime() {
 		vec2 pos(sprite.getPosition());
 		Enemy *baby = game->room->addEnemy(new ESlime(pos, level + 1));
 		baby->spawning = false;
+		baby->solid = true;
 		baby = game->room->addEnemy(new ESlime(pos + vec2(32, 0), level + 1));
 		baby->spawning = false;
+		baby->solid = true;
 	}
 }
 
@@ -282,8 +285,8 @@ void Boss::renderStatic() {
 }
 
 EEyeBoss::EEyeBoss(vec2 pos) : Boss(pos) {
-	sprite.setSize(vec2(ENT_SIZE * 2, ENT_SIZE * 2));
 	sprite.setTexture(Images::get("eye.png"));
+	setSize(vec2(ENT_SIZE * 2, ENT_SIZE * 2));
 	speed = baseSpeed = 50.0f;
 	expTime = 5.0f;
 	expTotal = 50;
@@ -316,8 +319,8 @@ void EEyeBoss::update() {
 }
 
 ERamBoss::ERamBoss(vec2 pos) : Boss(pos) {
-	sprite.setSize(vec2(ENT_SIZE * 3, ENT_SIZE * 3));
 	sprite.setTexture(Images::get("ram.png"));
+	setSize(vec2(ENT_SIZE * 3, ENT_SIZE * 3));
 	health = maxHealth = 18000;
 	chargeMax = 800.0f;
 	chargeSpeed = 1200.0f;
@@ -335,7 +338,7 @@ void ERamBoss::update() {
 		float x = chargeSpeed * frameTime * cos(chargeAngle);
 		float y = chargeSpeed * frameTime * sin(chargeAngle);
 		chargeDist += hypot(y, x);
-		sprite.move(x, y);
+		move(vec2(x, y));
 
 		if (player->intersects(this)) {
 			chargeDist = chargeMax;

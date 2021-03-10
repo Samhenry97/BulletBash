@@ -9,6 +9,8 @@ protected:
 
 public:
 	sf::RectangleShape sprite;
+	sf::RectangleShape hitbox;
+	bool solid = true;
 
 	GameObject();
 	GameObject(vec2 pos, vec2 size);
@@ -20,6 +22,12 @@ public:
 	virtual void renderMinimap();
 	virtual bool intersects(GameObject *other);
 	virtual bool contains(vec2 point);
+
+	void setPosition(vec2 newPos);
+	void setSize(vec2 newSize);
+	void setRotation(float newRotation);
+	void setOrigin(vec2 newOrigin);
+	void move(vec2 offset);
 
 	float dist(GameObject *other);
 	float angle(GameObject *other);

@@ -8,7 +8,7 @@ namespace Physics {
 
 	bool lineIntersects(vec2 p1, vec2 q1, vec2 p2, vec2 q2) {
 		vec2 s1, s2;
-		s1.x = q1.x - p1.x; 
+		s1.x = q1.x - p1.x;
 		s1.y = q1.y - p1.y;
 		s2.x = q2.x - p2.x;
 		s2.y = q2.y - p2.y;

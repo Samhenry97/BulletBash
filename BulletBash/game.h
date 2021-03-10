@@ -36,6 +36,7 @@ public:
 	void transportToRoom(Room *room);
 	void nextFloor();
 	void start();
+	void calculateViewPositions();
 	void sendButtonPressed(int id, int button);
 	void sendButtonReleased(int id, int button);
 	void sendAxisMoved(int id, int axis, float pos);
